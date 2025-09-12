@@ -1,0 +1,44 @@
+graph TD
+    subgraph Architecture [Архитектура системы]
+        CLIENT[Клиенты]:::client
+        CDN[CDN/CloudFront]:::entry
+        API[API Gateway]:::entry
+        MICRO[Микросервисы]:::business
+        DB[(Управляемая БД)]:::storage
+        MSG[Очередь сообщений]:::integration
+        ADAPTER[Адаптеры POS]:::integration
+        POS[POS магазинов]:::external
+        PAYMENT[Платежный шлюз]:::integration
+        BANK[Банковские системы]:::external
+
+        CLIENT --> CDN
+        CDN --> API
+        API --> MICRO
+        MICRO --> DB
+        API --> MSG
+        MSG --> ADAPTER
+        ADAPTER --> POS
+        API --> PAYMENT
+        PAYMENT --> BANK
+    end
+
+    subgraph Legend [Легенда]
+        L1[Клиентская часть]:::client
+        L2[Входные точки]:::entry
+        L3[Бизнес-логика]:::business
+        L4[Системы хранения]:::storage
+        L5[Интеграционные компоненты]:::integration
+        L6[Внешние системы]:::external
+    end
+
+    classDef client fill:#e1f5fe;
+    classDef entry fill:#fff3e0;
+    classDef business fill:#e8f5e9;
+    classDef storage fill:#ffebee;
+    classDef integration fill:#fff9c4;
+    classDef external fill:#e8eaf6;
+
+    Architecture --> Invisible[ ]:::invisible
+    Invisible --> Legend
+    
+    classDef invisible fill:#ffffff, stroke:#ffffff, color:#ffffff;
