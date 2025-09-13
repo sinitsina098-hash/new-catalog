@@ -89,7 +89,7 @@ title: "🏗️ Архитектурное Ката: Система онлайн
 
 ### Диаграмма развертывания
 
-<mermaid path="./_index-2.mermaid" width="780px" height="152px"/>
+<drawio path="./arkhitekturnoe-kata-sistema-onlayn-zakazov-d.svg" width="211px" height="101px"/>
 
 ## 3\. ⚠️ Учтите риски
 
