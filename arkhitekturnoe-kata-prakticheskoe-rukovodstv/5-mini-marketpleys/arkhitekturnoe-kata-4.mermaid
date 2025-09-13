@@ -1,0 +1,23 @@
+graph LR
+    CLIENT[Клиенты] --> LB[Load Balancer]
+    LB --> API
+    API --> AUTH
+    AUTH --> PROD [Catalog Service]
+    PROD --> K8S[Kubernetes Cluster]
+    PROD --> K8S2[Kubernetes Cluster2]
+    
+    subgraph K8S [Продукционный кластер]
+        ORDER[Order Service]
+        MESSAGE[Message service]
+        PAYMENT[Payment Service]
+    end
+
+    subgraph K8S2 [Публикационный кластер]
+        FRAUD[AntiFraud Service]
+        REVIEW[Review service]
+    end
+
+    K8S --> DB[(Order Payment)]
+    K8S --> MQ[(Object Storage)]
+
+    K8S2 --> MQ
