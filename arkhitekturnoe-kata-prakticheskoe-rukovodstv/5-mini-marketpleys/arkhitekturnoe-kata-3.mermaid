@@ -5,20 +5,24 @@ Auth[Auth]
 Catalog[Catalog]
 Order[Order]
 Payment[Payment]
-PaymentDB[(Payment database)]
+PaymentDB[(Order-Payment database)]
 Msg[Messaging]
 Review[Review]
 Fraud[Fraud Detection]
 Storage[(Object Storage)]
+Notification[Notifications]
 
 
 Client <--> API
-API <--> Auth
-API <--> Catalog
-API <--> Order
-API <--> Review
-API <--> Payment
+API --> Auth
+API --> Review
+API --> Catalog
+API --> Order
+API --> Payment
+API --> Notification
 Payment <--> PaymentDB
 Catalog <--> Storage
-Catalog <--> Fraud
+Review <--> Storage
+Order --> PaymentDB
+Catalog --> Fraud
 Msg <--> API

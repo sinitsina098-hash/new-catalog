@@ -109,7 +109,7 @@ title: 🏗️ Архитектурное Ката
 
 **Нарисуйте диаграмму компонентов:**
 
-<mermaid path="./arkhitekturnoe-kata-3.mermaid" width="759px" height="498px"/>
+<mermaid path="./arkhitekturnoe-kata-3.mermaid" width="780px" height="603px"/>
 
 **Добавьте диаграмму развертывания:**
 
