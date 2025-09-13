@@ -120,7 +120,7 @@ title: 🏗️ Архитектурное Ката
 
 **Диаграмма развертывания:**
 
-<mermaid path="./arkhitekturnoe-kata.mermaid" width="780px" height="157px"/>
+<mermaid path="./arkhitekturnoe-kata.mermaid" width="780px" height="182px"/>
 
 
 
