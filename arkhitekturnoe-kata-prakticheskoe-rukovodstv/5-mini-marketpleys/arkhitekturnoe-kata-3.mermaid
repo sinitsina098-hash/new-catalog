@@ -1,0 +1,24 @@
+flowchart LR
+Client[Web/Mobile]
+API[API Gateway]
+Auth[Auth]
+Catalog[Catalog]
+Order[Order]
+Payment[Payment]
+PaymentDB[(Payment database)]
+Msg[Messaging]
+Review[Review]
+Fraud[Fraud Detection]
+Storage[(Object Storage)]
+
+
+Client <--> API
+API <--> Auth
+API <--> Catalog
+API <--> Order
+API <--> Review
+API <--> Payment
+Payment <--> PaymentDB
+Catalog <--> Storage
+Catalog <--> Fraud
+Msg <--> API

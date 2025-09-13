@@ -107,29 +107,7 @@ title: 🏗️ Архитектурное Ката
 
 **Нарисуйте диаграмму компонентов:**
 
-```
-flowchart LR
-Client[Web/Mobile]
-API[API Gateway]
-Auth[Auth]
-Catalog[Catalog]
-Order[Order+Payment]
-Msg[Messaging]
-Review[Review]
-Fraud[Fraud Detection]
-Storage[(Object Storage)]
-
-
-Client --> API
-API --> Auth
-API --> Catalog
-API --> Order
-API --> Msg
-API --> Review
-Catalog --> Storage
-Catalog --> Fraud
-Msg --> API
-```
+<mermaid path="./arkhitekturnoe-kata-3.mermaid" width="759px" height="498px"/>
 
 **Добавьте диаграмму развертывания:**
 
