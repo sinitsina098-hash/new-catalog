@@ -116,7 +116,7 @@ title: 🏗️ Архитектурное Ката
 ```
 ```
 
-<mermaid path="./arkhitekturnoe-kata-2.mermaid" width="780px" height="202px"/>
+<mermaid path="./arkhitekturnoe-kata-2.mermaid" width="780px" height="168px"/>
 
 **Определите риски и предположения:**
 
