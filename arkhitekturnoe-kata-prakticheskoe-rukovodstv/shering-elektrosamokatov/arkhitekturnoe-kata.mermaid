@@ -1,0 +1,15 @@
+graph LR
+    CLIENT[Клиенты] --> CDN[CDN]
+    CDN --> LB[Load Balancer]
+    LB --> K8S[Kubernetes Cluster]
+    
+    subgraph K8S [Продукционный кластер]
+        API[API Gateway]
+        AUTH[Auth Service]
+        PROD[Product Service]
+        ORDER[Order Service]
+    end
+    
+    K8S --> DB[(Основная БД)]
+    K8S --> CACHE[(Кэш Redis)]
+    K8S --> MQ[Message Queue]
