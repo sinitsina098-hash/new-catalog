@@ -105,6 +105,8 @@ title: 🏗️ Архитектурное Ката
 
 -  Multiplatform -- iOS, android, web
 
+-  Notification service -- сервис уведомлений
+
 **Нарисуйте диаграмму компонентов:**
 
 <mermaid path="./arkhitekturnoe-kata-3.mermaid" width="759px" height="498px"/>
