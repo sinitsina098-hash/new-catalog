@@ -2,7 +2,7 @@ graph LR
     CLIENT[Клиенты] --> LB[Load Balancer]
     LB --> API
     API --> AUTH
-    AUTH --> PROD [Catalog Service]
+    AUTH --> PROD[Catalog Service]
     PROD --> K8S[Kubernetes Cluster]
     PROD --> K8S2[Kubernetes Cluster2]
     
