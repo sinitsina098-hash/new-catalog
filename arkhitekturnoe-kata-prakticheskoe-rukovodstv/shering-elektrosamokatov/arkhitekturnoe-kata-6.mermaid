@@ -1,0 +1,84 @@
+graph TD
+    subgraph Architecture [Архитектура системы аренды самокатов]
+        Mobile[Мобильное приложение]:::client
+        Web[Веб-интерфейс]:::client
+        CDN[CDN/CloudFront, Кэширование]:::entry
+        API[API Gateway]:::entry
+        
+        subgraph Microservices [Микросервисы]
+            USER[User Service]:::business
+            DB_USER[(User DB)]:::storage
+            
+            SCOOTER[Scooter Service]:::business
+            DB_SCOOTER[(Scooter DB)]:::storage
+            
+            TRIP[Trip Service]:::business
+            DB_TRIP[(Trip DB)]:::storage
+            
+            GEOFENCE[Geofence Service]:::business
+            DB_GEO[(Geofence DB)]:::storage
+            
+            PAYMENT[Payment Service]:::business
+            DB_PAYMENT[(Payment DB)]:::storage
+            
+            NOTIFY[Notification Service]:::business
+            DB_NOTIFY[(Notification DB)]:::storage
+        end
+
+ 
+        MBB[IoT Message Broker]:::integration
+
+        PAYMENT_GW[Платежный шлюз]:::external
+        
+
+
+        IOT[IoT устройства самокатов]:::external
+        BANK[Банковские системы]:::external
+        
+
+        Mobile --> CDN
+        Web --> CDN
+        CDN --> API
+        API --> USER
+        API --> SCOOTER
+        API --> TRIP
+        API --> PAYMENT
+        API --> NOTIFY
+        API --> GEOFENCE
+        
+        SCOOTER --> MBB
+        MBB --> IOT
+        
+        USER --> DB_USER
+        SCOOTER --> DB_SCOOTER
+        TRIP --> DB_TRIP
+        GEOFENCE --> DB_GEO
+        PAYMENT --> DB_PAYMENT
+        NOTIFY --> DB_NOTIFY
+        
+        PAYMENT --> PAYMENT_GW
+        PAYMENT_GW --> BANK
+        
+
+    end
+
+
+    subgraph Legend [Легенда]
+        L1[Клиентская часть]:::client
+        L2[Входные точки]:::entry
+        L3[Бизнес-логика]:::business
+        L4[Интеграционные компоненты]:::integration
+        L5[Внешние системы]:::external
+        L6[Системы хранения]:::storage
+    end
+
+    classDef client fill:#e1f5fe;
+    classDef entry fill:#fff3e0;
+    classDef business fill:#e8f5e9;
+    classDef integration fill:#fff9c4;
+    classDef external fill:#e8eaf6;
+
+    Architecture --> Invisible[ ]:::invisible
+    Invisible --> Legend
+    
+    classDef invisible fill:#ffffff, stroke:#ffffff, color:#ffffff;
