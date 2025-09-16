@@ -2,12 +2,13 @@ graph TD
     subgraph Architecture [Архитектура системы аренды самокатов]
         Mobile[Мобильное приложение]:::client
         Web[Веб-интерфейс]:::client
-        CDN[CDN/CloudFront, Кэширование]:::entry
+        CDN[CDN/CloudFront]:::entry
         API[API Gateway]:::entry
         
         subgraph Microservices [Микросервисы]
             USER[User Service]:::business
             DB_USER[(User DB)]:::storage
+            Cash[(Кэширование, сессии)]:::storage
             
             SCOOTER[Scooter Service]:::business
             DB_SCOOTER[(Scooter DB)]:::storage
@@ -50,6 +51,7 @@ graph TD
         MBB --> IOT
         
         USER --> DB_USER
+        USER --> Cash
         SCOOTER --> DB_SCOOTER
         TRIP --> DB_TRIP
         GEOFENCE --> DB_GEO
