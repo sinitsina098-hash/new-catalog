@@ -5,8 +5,10 @@ graph LR
     
     subgraph K8S [Продукционный кластер]
         API[API Gateway]
-        AUTH[Auth Service]
+        USER[User Service]
         TRIP[Trip service]
+        SCOOT[Scooter Service]
+        GEO[Geofencing Service]
     end
     
     K8S --> DB[(Основная БД)]
