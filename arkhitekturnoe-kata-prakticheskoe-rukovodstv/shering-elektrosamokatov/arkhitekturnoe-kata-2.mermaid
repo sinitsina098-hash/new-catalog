@@ -1,12 +1,11 @@
 graph TD
     WEB[Web Client] --> API[API Gateway]
     MOB[Mobile App] --> API
-    API --> AUTH[Auth Service]
-    API --> PROD[Product Service]
+    API --> USER[User Service]
     API --> Trip[Trip Service]
     API --> PAYMENT[Payment Service]
     API --> NOTIFY[Notification Service]
-    API --> Location[Location Service]
-    API --> BFF[BFF Service] 
+    API --> SCOOT[Scooter Service]
+    API --> REPORT[Reporting Service] 
     API --> loT[loT Message Broker]
-    API --> loT[loT Message Broker]
+    API --> GEO[Geofencing Service]
