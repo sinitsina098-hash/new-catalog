@@ -1,0 +1,58 @@
+
+flowchart LR
+    %% Клиенты
+    subgraph Clients
+        Web[Web]
+        Mobile[iOS / Android]
+    end
+
+    %% Входная точка
+    LB[Load Balancer / API Gateway]
+
+    %% Микросервисы
+    Auth[Auth Service: регистрация, профили, роли]
+    Catalog[Catalog Service: товары, поиск, фильтры]
+    Order[Order Service: корзина, заказы]
+    Payment[Payment Service: шлюз / tokenization]
+    Messaging[Messaging Service: чат продавец-продавец]
+    Review[Review Service: отзывы, рейтинг]
+    Fraud[Fraud Detection Service: авто + ручная модерация]
+    Notification[Notification Service: push / e-mail / SMS]
+
+    %% Базы данных
+    DB_Internal[(Внутренняя БД: пользователи, платежи)]
+    DB_Object[(Облачное хранилище: медиа / S3 / CDN)]
+
+    %% Очереди и кэш
+    Queue[(Message Broker / очередь)]
+    Cache[(Redis / Cache)]
+
+    %% Взаимодействия
+    Web --> LB
+    Mobile --> LB
+    LB --> Auth
+    LB --> Catalog
+    LB --> Order
+    LB --> Payment
+    LB --> Messaging
+    LB --> Review
+
+    Catalog --> DB_Internal
+    Order --> DB_Internal
+    Auth --> DB_Internal
+    Review --> DB_Internal
+    Messaging --> Cache
+
+    Catalog --> DB_Object
+    Messaging --> Queue
+    Order --> Queue
+    Payment --> Queue
+    Queue --> Notification
+    Messaging --> Notification
+
+    Fraud --> Catalog
+    Catalog -.-> Fraud
+    Fraud --> Catalog
+
+    Payment --> ExternalPay[Внешний платежный провайдер PCI]
+    Notification --> ExternalNotif[Сторонний сервис уведомлений]
