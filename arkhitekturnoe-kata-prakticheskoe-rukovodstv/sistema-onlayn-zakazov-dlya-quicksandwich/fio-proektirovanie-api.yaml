@@ -1,0 +1,198 @@
+openapi: "3.0.1"
+info:
+  version:  1.0.0 | 01.04.2024
+  title: РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЃРµСЂРІРёСЃР°
+  description: РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ api-РёРЅС‚РµСЂС„РµР№СЃР° СЃРµСЂРІРёСЃР°
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description: Host РЅР° РєРѕС‚РѕСЂРѕРј СЂР°Р·РІРµСЂРЅСѓС‚ РјРёРєСЂРѕСЃРµСЂРІРёСЃ
+        EnvironmentPrefix:
+          default: ''
+          description: |
+            РџСЂРµС„РёРєСЃ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ С‚РµСЃС‚РѕРІРѕРіРѕ СЃС‚РµРЅРґР°, РІС‹РґРµР»РµРЅРЅРѕРіРѕ РїРѕРґ Р·Р°РґР°С‡Сѓ (feature environment).
+            Р¤Р°РєС‚РёС‡РµСЃРєРё РїРѕР·РІРѕР»СЏРµС‚ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ host РјРёРєСЂРѕСЃРµСЂРІРёСЃР°, С‚.Рє. С…РѕСЃС‚РёРЅРіРµ РјСЃ РІ РєР»Р°СЃС‚РµСЂРµ РѕРЅРё РІСЃРµ С…РѕСЃС‚СЏС‚СЃСЏ РЅР° РѕРґРЅРѕРј dns - СѓСЃР»РѕРІРЅРѕРј host.ru
+        MicroserviceName:
+          default: microservice
+          description: |
+            РРјСЏ РїРѕРґ РєРѕС‚РѕСЂС‹Рј РјРёРєСЂРѕСЃРµСЂРІРёСЃ СЂР°Р·РІРµСЂРЅСѓС‚ РІ РєР»Р°СЃС‚РµСЂРµ РјРёРєСЂРѕСЃРµСЂРІРёСЃРѕРІ
+            Р¤Р°РєС‚РёС‡РµСЃРєРё РїРѕР·РІРѕР»СЏРµС‚ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ host РјРёРєСЂРѕСЃРµСЂРІРёСЃР° РїСЂРё РѕР±СЂР°С‰РµРЅРёСЏС… Рє РЅРµРјСѓ
+tags:
+    - name: resources operations
+      description: РўСЌРіРёСЂРѕРІР°РЅРёРµ РјРµС‚РѕРґРѕРІ РґР»СЏ Р»РѕРіРёС‡РµСЃРєРѕР№ РіСЂСѓРїРїРёСЂРѕРІРєРё РїРѕ РїСЂРµРґРјРµС‚РЅРѕР№ РѕР±Р»Р°СЃС‚Рё, РЅР°РїСЂРёРјРµСЂ РјРµС‚РѕРґС‹ СЂР°Р±РѕС‚Р°СЋС‰РёРµ СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ РїРѕ СЂРµСЃСѓСЂСЃР°Рј СЃС‚РѕРёС‚ С‚СЌРіРёСЂРѕРІР°С‚СЊ РєР°Рє resources operations
+paths:
+  /resources:
+    get:
+      tags: 
+        - resources operations
+      operationId: GetResource
+      summary: РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЂРµСЃСѓСЂСЃРѕРІ
+      description: РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СЂРµСЃСѓСЂСЃРѕРІ. РџСЂРё Р·Р°РїСЂРѕСЃРµ РјРѕР¶РЅРѕ РѕС‚С„РёР»СЊС‚СЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє
+      parameters:
+        - in: query
+          name: resourceFilter
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceFilter"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcesRp"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+
+    post:
+      tags: 
+        - resources operations
+      operationId: CreateResource
+      summary: РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚
+      description: РњРµС‚РѕРґ СЃРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ РµРіРѕ СѓРЅРёРєР°Р»СЊРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcesRp'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/parameters/resourceId'
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+  /resources/{resourceId}:  
+    delete:
+      tags: 
+        - resources operations
+      operationId: deleteResource
+      summary: РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
+      description: РњРµС‚РѕРґ СѓРґР°Р»СЏРµС‚ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
+      parameters:
+        - in: path
+          name: resourceId
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceId"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+    put:
+      tags: 
+        - resources operations
+      operationId: UpdateResource
+      summary: РћР±РЅРѕРІРёС‚СЊ РѕР±СЉРµРєС‚
+      description: РњРµС‚РѕРґ РѕР±РЅРѕРІР»СЏРµС‚ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ РїРѕ Р°С‚СЂРёР±СѓС‚Р°Рј РїРµСЂРµРґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ
+      parameters:
+        - in: path
+          name: resourceId
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceRq'
+              
+      responses:
+        200:
+          description: OK
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      OAuth2:
+         type: oauth2
+         flows:
+          password:
+            tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+            scopes: {}
+  parameters:  
+    resourceId:
+      name: resourceId
+      in: path
+      description: РЈРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+      required: true
+      schema:
+        type: string
+        format: uuid
+    resourceFilter:
+      name: resourceFilter
+      in: query
+      description: Р¤РёР»СЊС‚СЂ РїР°СЂР°РјРµС‚СЂ
+      required: true
+      schema:
+        $ref: '#/components/schemas/resourceFilter'
+  schemas:
+    resourceFilter:
+      description: Р¤РёР»СЊС‚СЂ РїР°СЂР°РјРµС‚СЂ СЂРµСЃСѓСЂСЃР°
+      type: string
+    ResourcesRp: 
+        description: РЎРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ СЂРµСЃСѓСЂСЃ
+        type: array
+        items:
+          $ref: '#/components/schemas/Resource'
+    Resource:
+      type: object
+      description: РћР±СЉРµРєС‚ СЂРµСЃСѓСЂСЃ
+      required: 
+        - resourceId
+      properties:
+        Att1:
+         type: string
+         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ С‚РёРїР° СЃС‚СЂРѕРєР°
+        Att2:
+         type: integer
+         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ С‚РёРїР° С‡РёСЃР»Рѕ
+        Att3:
+         type: boolean
+         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ Р±СѓР»РµРІРѕРіРѕ С‚РёРїР°
+    ResourceRq:
+      $ref: '#/components/schemas/Resource'
+    
+   
