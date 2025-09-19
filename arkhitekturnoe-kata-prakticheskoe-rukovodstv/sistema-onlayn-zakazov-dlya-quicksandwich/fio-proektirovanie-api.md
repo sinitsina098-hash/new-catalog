@@ -94,7 +94,7 @@ title: Синицина Анна Проектирование API
 </tr>
 </table>
 
-## 3\. ✅ Swagger
+## 3\. 🤝 Swagger
 
 <openapi src="./fio-proektirovanie-api.yaml" flag="true"/>
 
