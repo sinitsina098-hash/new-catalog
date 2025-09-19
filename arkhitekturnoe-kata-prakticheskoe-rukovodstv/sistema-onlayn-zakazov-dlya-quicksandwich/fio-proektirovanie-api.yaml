@@ -1,8 +1,8 @@
 openapi: "3.0.1"
 info:
   version:  1.0.0 | 01.04.2024
-  title: РќР°РёРјРµРЅРѕРІР°РЅРёРµ СЃРµСЂРІРёСЃР°
-  description: РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ api-РёРЅС‚РµСЂС„РµР№СЃР° СЃРµСЂРІРёСЃР°
+  title: Наименование сервиса
+  description: Краткое описание api-интерфейса сервиса
 security:
   - BearerAuth: []
   - OAuth2: []
@@ -12,28 +12,28 @@ servers:
     variables:
         Host:
           default: host.ru
-          description: Host РЅР° РєРѕС‚РѕСЂРѕРј СЂР°Р·РІРµСЂРЅСѓС‚ РјРёРєСЂРѕСЃРµСЂРІРёСЃ
+          description: Host на котором развернут микросервис
         EnvironmentPrefix:
           default: ''
           description: |
-            РџСЂРµС„РёРєСЃ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ С‚РµСЃС‚РѕРІРѕРіРѕ СЃС‚РµРЅРґР°, РІС‹РґРµР»РµРЅРЅРѕРіРѕ РїРѕРґ Р·Р°РґР°С‡Сѓ (feature environment).
-            Р¤Р°РєС‚РёС‡РµСЃРєРё РїРѕР·РІРѕР»СЏРµС‚ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ host РјРёРєСЂРѕСЃРµСЂРІРёСЃР°, С‚.Рє. С…РѕСЃС‚РёРЅРіРµ РјСЃ РІ РєР»Р°СЃС‚РµСЂРµ РѕРЅРё РІСЃРµ С…РѕСЃС‚СЏС‚СЃСЏ РЅР° РѕРґРЅРѕРј dns - СѓСЃР»РѕРІРЅРѕРј host.ru
+            Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+            Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном host.ru
         MicroserviceName:
           default: microservice
           description: |
-            РРјСЏ РїРѕРґ РєРѕС‚РѕСЂС‹Рј РјРёРєСЂРѕСЃРµСЂРІРёСЃ СЂР°Р·РІРµСЂРЅСѓС‚ РІ РєР»Р°СЃС‚РµСЂРµ РјРёРєСЂРѕСЃРµСЂРІРёСЃРѕРІ
-            Р¤Р°РєС‚РёС‡РµСЃРєРё РїРѕР·РІРѕР»СЏРµС‚ РѕРєРѕРЅС‡Р°С‚РµР»СЊРЅРѕ РёРґРµРЅС‚РёС„РёС†РёСЂРѕРІР°С‚СЊ host РјРёРєСЂРѕСЃРµСЂРІРёСЃР° РїСЂРё РѕР±СЂР°С‰РµРЅРёСЏС… Рє РЅРµРјСѓ
+            Имя под которым микросервис развернут в кластере микросервисов
+            Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
 tags:
     - name: resources operations
-      description: РўСЌРіРёСЂРѕРІР°РЅРёРµ РјРµС‚РѕРґРѕРІ РґР»СЏ Р»РѕРіРёС‡РµСЃРєРѕР№ РіСЂСѓРїРїРёСЂРѕРІРєРё РїРѕ РїСЂРµРґРјРµС‚РЅРѕР№ РѕР±Р»Р°СЃС‚Рё, РЅР°РїСЂРёРјРµСЂ РјРµС‚РѕРґС‹ СЂР°Р±РѕС‚Р°СЋС‰РёРµ СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ РїРѕ СЂРµСЃСѓСЂСЃР°Рј СЃС‚РѕРёС‚ С‚СЌРіРёСЂРѕРІР°С‚СЊ РєР°Рє resources operations
+      description: Тэгирование методов для логической группировки по предметной области, например методы работающие с информацией по ресурсам стоит тэгировать как resources operations
 paths:
   /resources:
     get:
       tags: 
         - resources operations
       operationId: GetResource
-      summary: РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЂРµСЃСѓСЂСЃРѕРІ
-      description: РњРµС‚РѕРґ РІРѕР·РІСЂР°С‰Р°РµС‚ СЃРїРёСЃРѕРє СЂРµСЃСѓСЂСЃРѕРІ. РџСЂРё Р·Р°РїСЂРѕСЃРµ РјРѕР¶РЅРѕ РѕС‚С„РёР»СЊС‚СЂРѕРІР°С‚СЊ СЃРїРёСЃРѕРє
+      summary: Получить список ресурсов
+      description: Метод возвращает список ресурсов. При запросе можно отфильтровать список
       parameters:
         - in: query
           name: resourceFilter
@@ -60,8 +60,8 @@ paths:
       tags: 
         - resources operations
       operationId: CreateResource
-      summary: РЎРѕР·РґР°С‚СЊ РѕР±СЉРµРєС‚
-      description: РњРµС‚РѕРґ СЃРѕР·РґР°РµС‚ РѕР±СЉРµРєС‚ СЃ РµРіРѕ СѓРЅРёРєР°Р»СЊРЅС‹Рј РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј
+      summary: Создать объект
+      description: Метод создает объект с его уникальным идентификатором
       requestBody:
         content:
           application/json:
@@ -89,8 +89,8 @@ paths:
       tags: 
         - resources operations
       operationId: deleteResource
-      summary: РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
-      description: РњРµС‚РѕРґ СѓРґР°Р»СЏРµС‚ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ
+      summary: Удалить объект по его идентификатору
+      description: Метод удаляет объект по его идентификатору
       parameters:
         - in: path
           name: resourceId
@@ -112,8 +112,8 @@ paths:
       tags: 
         - resources operations
       operationId: UpdateResource
-      summary: РћР±РЅРѕРІРёС‚СЊ РѕР±СЉРµРєС‚
-      description: РњРµС‚РѕРґ РѕР±РЅРѕРІР»СЏРµС‚ РѕР±СЉРµРєС‚ РїРѕ РµРіРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂСѓ РїРѕ Р°С‚СЂРёР±СѓС‚Р°Рј РїРµСЂРµРґР°РЅРЅС‹Рј РІ Р·Р°РїСЂРѕСЃРµ
+      summary: Обновить объект
+      description: Метод обновляет объект по его идентификатору по атрибутам переданным в запросе
       parameters:
         - in: path
           name: resourceId
@@ -156,7 +156,7 @@ components:
     resourceId:
       name: resourceId
       in: path
-      description: РЈРЅРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ
+      description: Уникальный идентификатор
       required: true
       schema:
         type: string
@@ -164,34 +164,34 @@ components:
     resourceFilter:
       name: resourceFilter
       in: query
-      description: Р¤РёР»СЊС‚СЂ РїР°СЂР°РјРµС‚СЂ
+      description: Фильтр параметр
       required: true
       schema:
         $ref: '#/components/schemas/resourceFilter'
   schemas:
     resourceFilter:
-      description: Р¤РёР»СЊС‚СЂ РїР°СЂР°РјРµС‚СЂ СЂРµСЃСѓСЂСЃР°
+      description: Фильтр параметр ресурса
       type: string
     ResourcesRp: 
-        description: РЎРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ СЂРµСЃСѓСЂСЃ
+        description: Список объектов ресурс
         type: array
         items:
           $ref: '#/components/schemas/Resource'
     Resource:
       type: object
-      description: РћР±СЉРµРєС‚ СЂРµСЃСѓСЂСЃ
+      description: Объект ресурс
       required: 
         - resourceId
       properties:
         Att1:
          type: string
-         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ С‚РёРїР° СЃС‚СЂРѕРєР°
+         description: Простой атрибут типа строка
         Att2:
          type: integer
-         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ С‚РёРїР° С‡РёСЃР»Рѕ
+         description: Простой атрибут типа число
         Att3:
          type: boolean
-         description: РџСЂРѕСЃС‚РѕР№ Р°С‚СЂРёР±СѓС‚ Р±СѓР»РµРІРѕРіРѕ С‚РёРїР°
+         description: Простой атрибут булевого типа
     ResourceRq:
       $ref: '#/components/schemas/Resource'
     
