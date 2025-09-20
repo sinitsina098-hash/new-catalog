@@ -97,7 +97,7 @@ title: Аникеев Максим
 <td>
 
 **Response (200):**\
-`notification_id: UUID`\
+`notificationId: UUID`\
 `status: accepted`\
 \
 **Ошибки:**\
@@ -137,7 +137,7 @@ title: Аникеев Максим
 <td>
 
 **Response (200):**\
-`notification_id: UUID`\
+`notificationId: UUID`\
 `status: accepted`\
 \
 **Ошибки:**\
@@ -181,7 +181,7 @@ title: Аникеев Максим
 <td>
 
 **Response (200):**\
-`notification_id: UUID`\
+`notificationId: UUID`\
 `status: accepted`
 
 \
@@ -239,4 +239,4 @@ title: Аникеев Максим
 </tr>
 </table>
 
-##  3\. 🤝 Swagger
+## 3\. 🤝 Swagger
