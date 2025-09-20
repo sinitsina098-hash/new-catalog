@@ -86,7 +86,7 @@ title: Аникеев Максим
 \
 **Body JSON:**\
 \{\
-"template_key": "trip_started",\
+"event_key": "trip_started",\
 "channels": \["push", "sms"\],\
 "parameters": \{\
 "scooter_id": "sct_123",\
@@ -97,7 +97,7 @@ title: Аникеев Максим
 </td>
 <td>
 
-**Успех (200):**\
+**Response (200):**\
 \{\
 "notification_id": "notif_987",\
 "status": "accepted"\
@@ -136,7 +136,7 @@ title: Аникеев Максим
 \
 **Body JSON:**\
 \{\
-"template_key": "payment_success",\
+"event_key": "payment_success",\
 "channels": \["email", "push"\],\
 "parameters": \{\
 "amount": 150.50,\
@@ -148,7 +148,7 @@ title: Аникеев Максим
 </td>
 <td>
 
-**Успех (200):**\
+**Response (200):**\
 \{\
 "notification_id": "notif_988",\
 "status": "accepted"\
@@ -185,7 +185,7 @@ title: Аникеев Максим
 **Body JSON:**\
 \{\
 "user_id": "usr_789",\
-"template_key": "welcome_message",\
+"event_key": "welcome_message",\
 "channels": \["email", "push"\],\
 "parameters": \{\
 "user_name": "Иван Иванов",\
@@ -196,7 +196,7 @@ title: Аникеев Максим
 </td>
 <td>
 
-**Успех (200):**\
+**Response (200):**\
 \{\
 "notification_id": "notif_989",\
 "status": "accepted"\
@@ -236,7 +236,7 @@ title: Аникеев Максим
 **Body JSON:**\
 \{\
 "user_id": "usr_345",\
-"template_key": "in_app_message",\
+"event_key": "in_app_message",\
 "channels": \["in_app"\],\
 "parameters": \{\
 "title": "Новая функция",\
@@ -247,7 +247,7 @@ title: Аникеев Максим
 </td>
 <td>
 
-**Успех (200):**\
+**Response (200):**\
 \{\
 "notification_id": "notif_991",\
 "status": "delivered"\
@@ -287,7 +287,7 @@ title: Аникеев Максим
 \
 **Body JSON:**\
 \{\
-"template_key": "marketing_campaign",\
+"event_key": "marketing_campaign",\
 "channels": \["email", "push", "sms"\],\
 "user_segment": "all_active_users",\
 "parameters": \{\
@@ -299,7 +299,7 @@ title: Аникеев Максим
 </td>
 <td>
 
-**Успех (200):**\
+**Response (200):**\
 \{\
 "batch_id": "batch_678",\
 "status": "processing",\
