@@ -109,10 +109,14 @@ title: Малышев Игорь
 </td>
 <td>
 
+Json файл с описательными данными объявления, например:
+
 \{ "title":"iPhone 18, 128GB", "description":"Состояние: почти новое", "price":24990, "currency":"RUB", "categoryId":"phones", "attributes":\{"brand":"Apple","model":"13","color":"black"}, "images":\["img1.jpg", "..."\]
 
 </td>
 <td>
+
+Код ответа о создании/не создании и json с описанием:
 
 201 Created: json \{ "id":"listing-uuid", "status":"pending_auto_check", "createdAt":"2025-09-20T12:00:00Z", "moderationScore":0.86 }
 
@@ -138,10 +142,14 @@ title: Малышев Игорь
 </td>
 <td>
 
+get-запрос с фильтрами:
+
 GET /v1/catalog/search?q=iphone&minPrice=10000&maxPrice=30000
 
 </td>
 <td>
+
+Код ответа о результатах поиска и json:
 
 200 OK: json \{ "total":1234, "page":1, "size":20, "items":\[\{"id":"...","title":"...", "price":...}\] }
 
@@ -166,16 +174,30 @@ Moderator UI / Fraud
 </td>
 <td>
 
+patch запрос для частичного обновления ресурса (только статуса объявления, не самого объявления):
+
 PATCH /v1/catalog/\{id}/moderation \{status:"rejected", reason:"fake photos"}
 
 </td>
 <td>
 
+Ответ и публикация события, чтобы уведомление сообщало продавцу, что с его объявлением:
+
 200 OK + event `listing.moderated`
+
+
+
+Внутри события передается информация о модерации (например, что объявление отклонено)
 
 </td>
 </tr>
 </table>
+
+
+
+
+
+
 
 
 
