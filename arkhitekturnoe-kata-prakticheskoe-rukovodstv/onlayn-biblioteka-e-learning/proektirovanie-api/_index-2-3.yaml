@@ -244,14 +244,7 @@ components:
         fileSize:
           type: integer
           description: Размер файла в байтах
-        mimeType:
-          type: string
-          description: MIME-тип файла
         createdAt:
           type: string
           format: date-time
           description: Дата создания
-        updatedAt:
-          type: string
-          format: date-time
-          description: Дата обновления"
