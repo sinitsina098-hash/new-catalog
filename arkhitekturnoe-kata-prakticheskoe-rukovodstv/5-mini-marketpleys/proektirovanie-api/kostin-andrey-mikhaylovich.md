@@ -92,9 +92,9 @@ title: Костин Андрей Михайлович
 
 ```json
 { 
-	"author_id": "uuid", 
-	"target_type": "product", 
-	"target_id": "uuid", 
+	"author_id": "a_uuid", 
+	"target_type": "t_type", 
+	"target_id": "t_uuid", 
 	"rating": 4, 
 	"text": "text" 
 }
@@ -103,17 +103,30 @@ title: Костин Андрей Михайлович
 </td>
 <td>
 
+statuses
+
+\[201, 400, 401, 404\]
+
+**user_response**
+
 ```json
 {
-	"review_id": "uuid",
-	"author_id": "uuid",
-	"target_type": "product",
-	"target_id": "uuid",
-	"rating": 4,
-	"text": "Товар полностью соответствует описанию",
+	"status_code": 201,
+	"message": "отзыв успешно опубликова",
+	"rating": "4",
+	"text": "text"
+}
+```
+
+**system_response**
+
+```json
+{
+	"author_id": "a_uuid",
+	"target_id": "t_uuid",
 	"status": "active",
-	"created_at": "2025-09-20T12:30:00Z",
-	"editable_until": "2025-10-20T12:30:00Z"
+	"created_at": "date",
+	"modified_at": "date"
 }
 ```
 
@@ -139,12 +152,43 @@ title: Костин Андрей Михайлович
 </td>
 <td>
 
-
+```json
+{
+	"author_id": "a_uuid",
+	"target_id": "t_uuid",
+	"rating": "rating",
+	"text": "text"
+}
+```
 
 </td>
 <td>
 
+statuses
 
+\[200, 400, 401, 404\]
+
+**user_response**
+
+```json
+{
+	"status_code": 200,
+	"message": "отзыв успешно обновлен",
+	"rating": "4",
+	"text": "text"
+}
+```
+
+**system_response**
+
+```json
+{
+	"author_id": "a_uuid",
+	"target_id": "t_uuid",
+	"status": "active",
+	"modified_at": "date"
+}
+```
 
 </td>
 </tr>
@@ -166,7 +210,12 @@ title: Костин Андрей Михайлович
 </td>
 <td>
 
-
+```json
+{
+	"author_id": "a_uuid",
+	"target_id": "t_uuid"
+}
+```
 
 </td>
 <td>
