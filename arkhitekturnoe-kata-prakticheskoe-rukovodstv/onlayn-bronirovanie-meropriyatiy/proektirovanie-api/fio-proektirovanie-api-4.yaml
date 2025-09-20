@@ -1,0 +1,77 @@
+openapi: "3.0.1"
+info:
+  version:  1.0.0 | 01.04.2024
+  title: Сервис мероприятий 
+  description: Отображение и управление списком мероприятий
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description:  events.api.mycompany.ru 
+        EnvironmentPrefix:
+          default: ''
+          description: по умолчанию
+        MicroserviceName:
+          default: microservice
+          description: event-management-service
+
+tags:
+    - name: resources operations
+      description: resources operations
+paths:
+  
+  /Event/{eventId}:  
+    delete:
+      tags: 
+        - resources operations
+      operationId: deleteEvent
+      summary: Удалить мероприятие  по его идентификатору
+      description: Метод удаляет мероприятие по его идентификатору
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            $ref: "#/components/parameters/eventId"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+    
+              
+     
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      OAuth2:
+         type: oauth2
+         flows:
+          password:
+            tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+            scopes: {}
+  parameters:  
+    eventId:
+      name: eventId
+      in: path
+      description: Уникальный идентификатор мероприятия 
+      required: true
+      schema:
+        type: string
+        format: uuid
+    
+   

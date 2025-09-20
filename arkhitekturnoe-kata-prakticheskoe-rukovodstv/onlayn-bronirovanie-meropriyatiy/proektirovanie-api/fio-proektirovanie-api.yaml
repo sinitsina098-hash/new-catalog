@@ -1,16 +1,8 @@
-<<<<<<< Updated upstream
 openapi: "3.0.1"
 info:
   version:  1.0.0 | 01.04.2024
   title: Наименование сервиса
   description: Краткое описание api-интерфейса сервиса
-=======
-openapi: 3.1.0
-info:
-  version:  1.0.0 | 01.04.2024
-  title: Сервис мероприятий 
-  description: Отображение и управление списком мероприятий
->>>>>>> Stashed changes
 security:
   - BearerAuth: []
   - OAuth2: []
@@ -20,7 +12,6 @@ servers:
     variables:
         Host:
           default: host.ru
-<<<<<<< Updated upstream
           description: Host на котором развернут микросервис
         EnvironmentPrefix:
           default: ''
@@ -106,34 +97,6 @@ paths:
           required: true
           schema:
             $ref: "#/components/parameters/resourceId"
-=======
-          description:  events.api.mycompany.ru 
-        EnvironmentPrefix:
-          default: ''
-          description: по умолчанию
-        MicroserviceName:
-          default: microservice
-          description: event-management-service
-
-tags:
-    - name: resources operations
-      description: resources operations
-paths:
-  
-  /Event/{eventId}:  
-    delete:
-      tags: 
-        - resources operations
-      operationId: deleteEvent
-      summary: Удалить мероприятие  по его идентификатору
-      description: Метод удаляет мероприятие по его идентификатору
-      parameters:
-        - in: path
-          name: eventId
-          required: true
-          schema:
-            $ref: "#/components/parameters/eventId"
->>>>>>> Stashed changes
       responses:
         200:
           description: OK
@@ -145,7 +108,6 @@ paths:
           description: Not Found
         500:
           description: Internal Service Error
-<<<<<<< Updated upstream
     put:
       tags: 
         - resources operations
@@ -178,11 +140,6 @@ paths:
           description: Not Found
         500:
           description: Internal Service Error
-=======
-    
-              
-     
->>>>>>> Stashed changes
 components:
   securitySchemes:
       BearerAuth:
@@ -196,17 +153,10 @@ components:
             tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
             scopes: {}
   parameters:  
-<<<<<<< Updated upstream
     resourceId:
       name: resourceId
       in: path
       description: Уникальный идентификатор
-=======
-    eventId:
-      name: eventId
-      in: path
-      description: Уникальный идентификатор мероприятия 
->>>>>>> Stashed changes
       required: true
       schema:
         type: string
@@ -222,7 +172,6 @@ components:
     resourceFilter:
       description: Фильтр параметр ресурса
       type: string
-<<<<<<< Updated upstream
     ResourcesRp: 
         description: Список объектов ресурс
         type: array
@@ -245,14 +194,5 @@ components:
          description: Простой атрибут булевого типа
     ResourceRq:
       $ref: '#/components/schemas/Resource'
-=======
-         description: Простой атрибут булевого типа
-    ResourceRq:
-      $ref: '#/components/schemas/Resource'
-schemas:
-    resourceFilter:
-      description: Фильтр параметр ресурса
-      type: string
->>>>>>> Stashed changes
     
    

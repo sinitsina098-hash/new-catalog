@@ -242,3 +242,9 @@ ID мероприятия\
 </td>
 </tr>
 </table>
+
+## . 🤝 Swagger
+
+<openapi src="./fio-proektirovanie-api-4.yaml" flag="true"/>
+
+
