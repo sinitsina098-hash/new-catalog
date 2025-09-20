@@ -158,7 +158,7 @@ Id поездки
 
 3\. Отправить координаты в Geofencing Service на проверку.
 
-1. Отправить данные в Payment Service для расчета стоимости поездки
+4\.Отправить данные в Payment Service для расчета стоимости поездки
 
 5\. Обновить статус на `completed`.
 
@@ -186,7 +186,7 @@ Id поездки
 </td>
 <td>
 
-**Response (202 Accepted):**
+**Response (200 Accepted):**
 
 
 
@@ -198,9 +198,9 @@ Id поездки
 
 \- `message: "Trip ended. Payment in process."`
 
-**Ошибки (4xx):**
+**Ошибки :**
 
-\- `424 Failed Dependency` (нарушение правил парковки)
+\- `400 Failed` Parking(нарушение правил парковки)
 
 </td>
 </tr>
