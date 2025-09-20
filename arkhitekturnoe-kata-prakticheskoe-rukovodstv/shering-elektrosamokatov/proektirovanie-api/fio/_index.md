@@ -169,17 +169,21 @@ Id поездки
 
 **Id поездки**
 
-\- `tripId: UUID`
+-  `tripId: UUID`
 
 **Body (JSON):**
 
 Широта
 
-\- `endLatitude: number`
+-  `endLatitude: number`
 
 Долгота
 
-\- `endLongitude: number`
+-  `endLongitude: number`
+
+Время завершения поездки:
+
+-  `endedAt: string`
 
 </td>
 <td>
@@ -268,7 +272,7 @@ Id самоката
 
 **Ошибки :**
 
--  400
+-  400 `Failed` (резерв не создан)
 
 \- `409 Conflict` (самокат уже занят)
 
