@@ -69,7 +69,7 @@ title: Гурина Анастасия
 <tr>
 <td>
 
-Микросервис Booking-key, Email рассылка
+ Booking-key
 
 </td>
 <td>
