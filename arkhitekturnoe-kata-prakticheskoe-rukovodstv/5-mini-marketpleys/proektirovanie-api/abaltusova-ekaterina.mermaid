@@ -9,7 +9,8 @@ flowchart LR
     LB[Load Balancer / API Gateway]
 
     %% Микросервисы
-    Auth[Auth Service: регистрация, профили, роли]
+    Auth[Auth Service: регистрация,  роли]
+    Profile[Profile Service: профили]
     Catalog[Catalog Service: товары, поиск, фильтры]
     Order[Order Service: корзина, заказы]
     Payment[Payment Service: шлюз / tokenization]
@@ -30,6 +31,7 @@ flowchart LR
     Web --> LB
     Mobile --> LB
     LB --> Auth
+    LB --> Profile
     LB --> Catalog
     LB --> Order
     LB --> Payment
@@ -39,6 +41,7 @@ flowchart LR
     Catalog --> DB_Internal
     Order --> DB_Internal
     Auth --> DB_Internal
+    Profile --> DB_Internal
     Review --> DB_Internal
     Messaging --> Cache
 

@@ -7,7 +7,7 @@ title: Абалтусова Екатерина
 
 ### 1\.1 Диаграмма компонентов архитектуры
 
-<mermaid path="./abaltusova-ekaterina.mermaid" width="492px" height="363px"/>
+<mermaid path="./abaltusova-ekaterina.mermaid" width="780px" height="486px"/>
 
 ### 1\.2 Описание микросервиса
 
