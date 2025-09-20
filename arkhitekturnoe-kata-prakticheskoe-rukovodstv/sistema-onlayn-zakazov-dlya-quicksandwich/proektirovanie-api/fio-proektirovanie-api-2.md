@@ -1,13 +1,13 @@
 ---
-order: 2
-title: Синицина Анна Проектирование API
+order: 0.3
+title: "Синицина Анна "
 ---
 
 ## 1\. 📖 Описание функциональных границ микросервиса
 
 ### 1\.1 Диаграмма компонентов архитектуры
 
-<mermaid path="./fio-proektirovanie-api.mermaid"/>
+<mermaid path="./fio-proektirovanie-api-2.mermaid"/>
 
 ### 1\.2 Описание микросервиса
 
@@ -116,6 +116,6 @@ title: Синицина Анна Проектирование API
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./fio-proektirovanie-api.yaml" flag="true"/>
+<openapi src="./fio-proektirovanie-api-2.yaml" flag="true"/>
 
 ### 
