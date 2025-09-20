@@ -7,7 +7,7 @@ order: 4.5
 
 ### 1\.1 Диаграмма компонентов архитектуры
 
-<mermaid path="./stepanova-anna-2.mermaid" width="780px" height="140px"/>
+<mermaid path="./stepanova-anna-2.mermaid" width="780px" height="143px"/>
 
 ### 1\.2 Описание микросервиса
 
@@ -176,23 +176,21 @@ order: 4.5
 </td>
 <td>
 
-**Endpoint:** POST /api/v1/payments/confirmations\
-**Body:**\
-\- tripId: UUID (ID поездки, по которой подтверждается оплата)\
-\- finalAmount: Number (итоговая сумма к списанию после поездки)\
-\- currency: String (валюта операции, должна совпадать с валютой блокировки)
+\`\`\`\{\
+"trip_id": "trip_456",\
+"amount": 450.50,\
+"currency": "RUB",\
+"idempotency_key": "capture_trip_456"\
+}\`\`\`
 
 </td>
 <td>
 
-**Response (200):**\
-\- transactionId: String (идентификатор успешной транзакции)\
-\- status: "payment_confirmed" (статус подтверждения оплаты)\
-\- amountCharged: Number (фактически списанная сумма)\
-\- chargedAt: ISO DateTime (время выполнения списания)\
-**Ошибки:**\
-\- 404 Not Found (блокировка средств для указанной поездки не найдена)\
-\- 409 Conflict (транзакция уже была подтверждена или отменена ранее)
+\`\`\`\{\
+"status": "succeeded",\
+"transaction_id": "pi_3ABC...",\
+"amount_captured": 450.50\
+}\`\`\`
 
 </td>
 </tr>
