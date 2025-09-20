@@ -186,6 +186,6 @@ HTTP GET /introspect или /users/\{id}?fields=minimal, Authorization: Bearer
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./_index-2.yaml" flag="true"/>
+<openapi src="./_index.yaml" flag="true"/>
 
-### 
+###
