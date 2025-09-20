@@ -1,5 +1,5 @@
 ---
-order: 1
+order: 3
 title: ФИО
 ---
 
@@ -108,4 +108,4 @@ title: ФИО
 
 <openapi src="./_index-2.yaml" flag="true"/>
 
-### 
+###
