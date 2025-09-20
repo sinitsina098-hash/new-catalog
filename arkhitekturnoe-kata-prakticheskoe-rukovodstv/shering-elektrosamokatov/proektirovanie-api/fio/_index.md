@@ -270,27 +270,55 @@ Id самоката
 <tr>
 <td>
 
+**Мобильное приложение** (Front-end)
+
+</td>
+<td>
+
+Отобразить пользователю на карте самокаты, доступные для аренды.
+
+</td>
+<td>
+
+1\. Получить от Scooter Service актуальный список самокатов в заданном радиусе с статусом `available`.
+
+
+
+2\. Отфильтровать и вернуть данные для отображения.
+
+</td>
+<td>
+
+**Query Parameters:**
+
+широта центра поиска
+
+\- `lat: number` 
+
+(долгота)
+
+\- `lon: number` 
+
+радиус в метрах, опционально
+
+\- `radius: number` 
+
 
 
 </td>
 <td>
 
+**Response (200 OK):**
 
+\- `scooters: Array[{...}]`
 
-</td>
-<td>
+\- `id: UUID`
 
+\- `latitude: number`
 
+\- `longitude: number`
 
-</td>
-<td>
-
-
-
-</td>
-<td>
-
-
+\- `batteryLevel: number`
 
 </td>
 </tr>
