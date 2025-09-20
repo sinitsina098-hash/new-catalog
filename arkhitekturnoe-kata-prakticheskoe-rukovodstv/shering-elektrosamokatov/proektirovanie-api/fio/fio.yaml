@@ -1,0 +1,123 @@
+openapi: 3.0.4
+info:
+  title: Trip Service API
+  description: |-
+    API для управления жизненным циклом поездок в сервисе шеринга самокатов.
+    Trip Service оркeстрирует процессы бронирования, начала и завершения поездок.
+  termsOfService: https://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.12
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+servers:
+  - description: Production Environment
+    url: https://api.scootersharing.com/v1
+tags:
+  - name: trip
+    description: Управление поездками
+paths:
+  /trips/{tripId}/end:
+    post:
+      summary: Завершить поездку
+      description: |
+        Завершает активную поездку, фиксирует данные для расчета стоимости и инициирует процессы проверки парковки и платежа.
+        Возвращает предварительную стоимость. Финальный расчет может быть выполнен асинхронно.
+      tags:
+        - trip
+      parameters:
+        - name: tripId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - endLatitude
+                - endLongitude
+              properties:
+                endLatitude:
+                  type: number
+                  format: float
+                  example: 55.7600
+                endLongitude:
+                  type: number
+                  format: float
+                  example: 37.6200
+                endedAT:
+                  type: string
+                  format: date-time
+                  example: "2023-10-05T15:15:00Z"
+      responses:
+        200:
+          description: Поездка успешно завершена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedTrip'
+        400:
+          description: Нарушение правил парковки   
+        401:
+          description: Ошибка авторизации
+        404:
+          description: Поездка не найдена
+        409:
+          description: Невозможно завершить поездку (неверный статус)
+
+
+components:
+  schemas:
+    Trip:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        status:
+          type: string
+          enum: [reserved, in_progress, completed, cancelled]
+          example: "in_progress"
+        scooterId:
+          type: string
+          format: uuid
+          example: "b2c3d4e5-f6g7-8901-bcde-f23456789012"
+        userId:
+          type: string
+          format: uuid
+          example: "c3d4e5f6-g7h8-9012-cdef-345678901234"
+        startedAt:
+          type: string
+          format: date-time
+          example: "2023-10-05T14:30:00Z"
+   
+    CompletedTrip:
+      allOf:
+        - $ref: '#/components/schemas/Trip'
+        - type: object
+          properties:
+            startedAt:
+              type: string
+              format: date-time
+              example: "2023-10-05T14:30:00Z"
+            endedAt:
+              type: string
+              format: date-time
+              example: "2023-10-05T15:15:00Z"
+            preliminaryCost:
+              type: number
+              format: float
+              example: 150.50
+            message:
+              type: string
+              example: "Trip ended. Payment in process."

@@ -347,6 +347,6 @@ Id самоката
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./_index-2.yaml" flag="true"/>
+<openapi src="./fio.yaml" flag="true"/>
 
 ### 

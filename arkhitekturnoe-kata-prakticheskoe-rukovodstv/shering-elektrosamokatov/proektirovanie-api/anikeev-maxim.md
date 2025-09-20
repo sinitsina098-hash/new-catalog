@@ -7,7 +7,7 @@ title: Аникеев Максим
 
 ### 1\.1 Диаграмма компонентов архитектуры
 
-<mermaid path="./anikeev-maxim.mermaid" width="780px" height="143px"/>
+<mermaid path="./anikeev-maxim.mermaid" width="780px" height="140px"/>
 
 ### 1\.2 Описание микросервиса
 
@@ -315,3 +315,5 @@ title: Аникеев Максим
 </table>
 
 ## 3\. 🤝 Swagger
+
+
