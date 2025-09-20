@@ -79,24 +79,35 @@ components:
   schemas:
     Trip:
       type: object
+      required:
+            - id
+            - status
+            - scooterId
+            - userId
+            - startedAt
       properties:
         id:
+          description: 'идентификатор поездки'
           type: string
           format: uuid
           example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
         status:
+          description: 'статус поездки'
           type: string
           enum: [reserved, in_progress, completed, cancelled]
           example: "in_progress"
         scooterId:
+          description: 'идентификатор самоката'
           type: string
           format: uuid
           example: "b2c3d4e5-f6g7-8901-bcde-f23456789012"
         userId:
+          description: 'идентификатор пользователя'
           type: string
           format: uuid
           example: "c3d4e5f6-g7h8-9012-cdef-345678901234"
         startedAt:
+          description: 'Время начала поездки'
           type: string
           format: date-time
           example: "2023-10-05T14:30:00Z"
@@ -105,19 +116,22 @@ components:
       allOf:
         - $ref: '#/components/schemas/Trip'
         - type: object
+          required:
+              - startedAt
+              - endedAt
+              - message
           properties:
             startedAt:
+              description:  'Время начала поездки'
               type: string
               format: date-time
               example: "2023-10-05T14:30:00Z"
             endedAt:
+              description: 'Время окончания поездки'
               type: string
               format: date-time
               example: "2023-10-05T15:15:00Z"
-            preliminaryCost:
-              type: number
-              format: float
-              example: 150.50
             message:
+              description: 'Сообщение об окончании поездки и процессе оплаты'
               type: string
               example: "Trip ended. Payment in process."
