@@ -100,10 +100,13 @@ title: 🏗️ Архитектурное Ката
 ## **Диаграмма компонентов**
 
 <mermaid path="./arkhitekturnoe-kata-2.mermaid" width="780px" height="143px"/>
+<mermaid path="./arkhitekturnoe-kata-2.mermaid" width="780px" height="100px"/>
 
 ## **Диаграмма развертывания**
 
 <mermaid path="./arkhitekturnoe-kata.mermaid" width="780px" height="133px"/>
+
+<mermaid path="./arkhitekturnoe-kata-2.mermaid" width="780px" height="144px"/>
 
 
 
