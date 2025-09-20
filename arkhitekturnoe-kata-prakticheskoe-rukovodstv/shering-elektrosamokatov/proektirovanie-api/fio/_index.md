@@ -98,19 +98,7 @@ title: Неупокоев Никита Вячеславович
 
 \- `tripId: UUID`
 
-**Body (JSON):**
 
-**Id самоката**
-
-\- `scooterId: UUID`
-
-Широта
-
-\- `userLatitude: number`
-
-Долгота
-
-\- `userLongitude: number`
 
 </td>
 <td>
@@ -202,6 +190,8 @@ Id поездки
 
 \- `400 Failed` Parking(нарушение правил парковки)
 
+\- `404 Not Found` (поездка не найдена)
+
 </td>
 </tr>
 <tr>
@@ -263,6 +253,8 @@ Id самоката
 
 **Ошибки :**
 
+-  400
+
 \- `409 Conflict` (самокат уже занят)
 
 </td>
@@ -293,15 +285,15 @@ Id самоката
 
 широта центра поиска
 
-\- `lat: number` 
+\- `lat: number`
 
 (долгота)
 
-\- `lon: number` 
+\- `lon: number`
 
 радиус в метрах, опционально
 
-\- `radius: number` 
+\- `radius: number`
 
 
 
