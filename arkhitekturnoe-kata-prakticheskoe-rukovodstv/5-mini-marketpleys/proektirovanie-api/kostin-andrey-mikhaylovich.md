@@ -92,13 +92,15 @@ title: Костин Андрей Михайлович
 
 ```json
 { 
-	"author_id": "a_uuid", 
-	"target_type": "t_type", 
-	"target_id": "t_uuid", 
+	"user_id": "u_uuid",  
+	"product_id": "p_uuid",
+	"order_id": "o_uuid", 
 	"rating": 4, 
 	"text": "text" 
 }
 ```
+
+
 
 </td>
 <td>
@@ -112,18 +114,20 @@ statuses
 ```json
 {
 	"status_code": 201,
-	"message": "отзыв успешно опубликова",
+	"message": "отзыв успешно опубликован",
 	"rating": "4",
 	"text": "text"
 }
 ```
 
-**system_response**
+**system_response** (ответ, который хранится внутри системы и служит для добавление информации во внутренние бд)
 
 ```json
 {
-	"author_id": "a_uuid",
-	"target_id": "t_uuid",
+	"user_id": "a_uuid",
+	"product_id": "t_uuid",
+	"order_id": "o_uuid",
+	"review_id": "r_uuid",
 	"status": "active",
 	"created_at": "date",
 	"modified_at": "date"
@@ -140,24 +144,22 @@ statuses
 </td>
 <td>
 
-редактирование отзыва
+публикация обновленного  отзыва
 
 </td>
 <td>
 
--  проверка возможности редактирования отзыва
-
--  изменить текст и/или оценку
+-  изменить текст и/или оценку (сам факт изменения, без проверок на возможность внесения изменений)
 
 </td>
 <td>
 
 ```json
 {
-	"author_id": "a_uuid",
-	"target_id": "t_uuid",
-	"rating": "rating",
-	"text": "text"
+	"user_id": "u_uuid",
+	"review_id": "r_uuid",
+	"rating": 4,
+	"text": "new text"
 }
 ```
 
@@ -166,16 +168,16 @@ statuses
 
 statuses
 
-\[200, 400, 401, 404\]
+\[200, 400\]
 
 **user_response**
 
 ```json
 {
 	"status_code": 200,
-	"message": "отзыв успешно обновлен",
-	"rating": "4",
-	"text": "text"
+	"message": "отзыв успешно обновлён",
+	"rating": 4,
+	"text": "new text"
 }
 ```
 
@@ -183,8 +185,8 @@ statuses
 
 ```json
 {
-	"author_id": "a_uuid",
-	"target_id": "t_uuid",
+	"user_id": "u_uuid",
+	"review_id": "r_uuid",
 	"status": "active",
 	"modified_at": "date"
 }
@@ -205,22 +207,42 @@ statuses
 </td>
 <td>
 
--  удаление отзыва
+-  удаление отзыва (сам процесс удаления отзыва, без проверки на возможность удаления)
 
 </td>
 <td>
 
 ```json
 {
-	"author_id": "a_uuid",
-	"target_id": "t_uuid"
+	"user_id": "u_uuid",
+	"review_id": "r_uuid"
 }
 ```
 
 </td>
 <td>
 
+statuses
 
+\[200, 400\]
+
+**user_response**
+
+```json
+{
+	"status_code": 200,
+	"message": "отзыв успешно удалён"
+}
+```
+
+**system_response**
+
+```json
+{
+	"user_id": "u_uuid",
+	"review_id": "r_uuid"
+}
+```
 
 </td>
 </tr>
@@ -239,15 +261,54 @@ statuses
 
 -  получение списка отзывов по товару или продавцу
 
--  вывести средний рейтинг
+</td>
+<td>
+
+```json
+{
+	"type": "product/user",
+	"product_id": "p_uuid",
+	"page": 1,
+	"limit": 20,
+	"sorting_field": "field"
+}
+```
 
 </td>
 <td>
 
+statuses
+
+\[200, 400\]
+
+**user_response**
+
+```json
+{
+	"status_code": 200,
+	"reviews": [
+					{
+						"name": "r_name",
+						"rating": 4,
+						"text": "text",
+						"modified_at": "date"
+					},
+				],
+}
+```
 
 
-</td>
-<td>
+
+**system_response**
+
+```json
+{
+	"product_id": "p_uuid",
+	"page": 1,
+	"limit": 20,
+	"sorting_field": "field"
+}
+```
 
 
 
@@ -266,15 +327,42 @@ statuses
 </td>
 <td>
 
--  удаление отзыва
+-  удаление отзыва (сам процесс удаления отзыва после проверки на возможность удаления)
 
 </td>
 <td>
 
-
+```json
+{
+	"user_id": "u_uuid",
+	"review_id": "r_uuid"
+}
+```
 
 </td>
 <td>
+
+statuses
+
+\[200, 400\]
+
+**user_response**
+
+```json
+{
+	"status_code": 200,
+	"message": "отзыв успешно удалён"
+}
+```
+
+**system_response**
+
+```json
+{
+	"user_id": "u_uuid",
+	"review_id": "r_uuid"
+}
+```
 
 
 
@@ -282,7 +370,7 @@ statuses
 </tr>
 </table>
 
-## 3\. 🤝 Swagger
+## 3\. 🤝 Swagger 
 
 <openapi src="./_index.yaml" flag="true"/>
 
