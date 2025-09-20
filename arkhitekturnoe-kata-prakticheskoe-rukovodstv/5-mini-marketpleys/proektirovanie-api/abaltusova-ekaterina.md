@@ -144,7 +144,7 @@ Web/Mobile
 </td>
 <td>
 
-Верификация пользователя (как нового, так и существующего)
+Верификация существующего пользователя 
 
 </td>
 <td>
@@ -158,12 +158,45 @@ Web/Mobile
 </td>
 <td>
 
-\{ "email": "[user@ex.com](mailto:user@ex.com)", "verification_code": "123456" }
+\{ "id",
+
+"email": "[user@ex.com](mailto:user@ex.com)", "verification_code": "123456" }
 
 </td>
 <td>
 
 200 OK + \{ "id":"uuid", "email":"[user@ex.com](mailto:user@ex.com)", "status":"verified", "verifiedAt":"2025-09-20T12:35:56Z" }
+
+</td>
+</tr>
+<tr>
+<td>
+
+Web/Mobile
+
+</td>
+<td>
+
+Верификация нового пользователя 
+
+</td>
+<td>
+
+-  Отправить email с верификацией
+
+-  Проверить код подтверждения
+
+-  Верифицировать статус аккаунта или предложить отправить код повторно
+
+</td>
+<td>
+
+\{ ""email": "[user@ex.com](mailto:user@ex.com)", "verification_code": "123456" }
+
+</td>
+<td>
+
+201 OK + \{ "id":"uuid", "email":"[user@ex.com](mailto:user@ex.com)", "status":"verified", "verifiedAt":"2025-09-20T12:35:56Z" }
 
 </td>
 </tr>
@@ -189,12 +222,12 @@ Web/Mobile
 </td>
 <td>
 
-\{ "email": "[user@ex.com](mailto:user@ex.com)" }
+\{ ""email": "[user@ex.com](mailto:user@ex.com)", "verification_code": "123456" }
 
 </td>
 <td>
 
-200 OK + \{ "message": "Verification code sent" }
+200 OK + \{ "id":"uuid", "email":"[user@ex.com](mailto:user@ex.com)", "status":"verified", "verifiedAt":"2025-09-20T12:35:56Z" }
 
 </td>
 </tr>
