@@ -1,8 +1,8 @@
 openapi: "3.0.1"
 info:
-  version:  1.0.0 | 01.04.2024
-  title: Наименование сервиса
-  description: Краткое описание api-интерфейса сервиса
+  version:  1.0.0 | 20.09.2025
+  title: Content Management Service API
+  description: API для управления учебными материалами в системе e-learning
 security:
   - BearerAuth: []
   - OAuth2: []
@@ -19,127 +19,69 @@ servers:
             Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
             Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном host.ru
         MicroserviceName:
-          default: microservice
+          default: content-service
           description: |
             Имя под которым микросервис развернут в кластере микросервисов
             Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
 tags:
-    - name: resources operations
-      description: Тэгирование методов для логической группировки по предметной области, например методы работающие с информацией по ресурсам стоит тэгировать как resources operations
+    - name: content operations
+      description: Методы работы с учебными материалами
 paths:
-  /resources:
-    get:
-      tags: 
-        - resources operations
-      operationId: GetResource
-      summary: Получить список ресурсов
-      description: Метод возвращает список ресурсов. При запросе можно отфильтровать список
-      parameters:
-        - in: query
-          name: resourceFilter
-          required: true
-          schema:
-            $ref: "#/components/parameters/resourceFilter"
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ResourcesRp"
-        400:
-          description: Bad Request
-        401:
-          description: Unauthorized
-        404:
-          description: Not Found
-        500:
-          description: Internal Service Error
-
+  /courses/{courseId}/modules/{moduleId}/content-blocks:
     post:
       tags: 
-        - resources operations
-      operationId: CreateResource
-      summary: Создать объект
-      description: Метод создает объект с его уникальным идентификатором
+        - content operations
+      operationId: CreateContentBlock
+      summary: Добавление блока учебного материала к занятию
+      description: Метод создает блок учебного материала с привязкой к курсу, модулю и автору
+      parameters:
+        - $ref: "#/components/parameters/courseId"
+        - $ref: "#/components/parameters/moduleId"
       requestBody:
         content:
-          application/json:
+          multipart/form-data::
             schema:
-              $ref: '#/components/schemas/ResourcesRp'
+              $ref: '#/components/schemas/ContentBlockCreateRq'
+          application/json::
+            schema:
+              $ref: '#/components/schemas/ContentBlockCreateRq'
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                  $ref: '#/components/parameters/resourceId'
-        204:
-          description: No Content
+                  $ref: '#/components/schemas/ContentBlockCreateRp'
         400:
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         401:
           description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         404:
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         500:
           description: Internal Service Error
-  /resources/{resourceId}:  
-    delete:
-      tags: 
-        - resources operations
-      operationId: deleteResource
-      summary: Удалить объект по его идентификатору
-      description: Метод удаляет объект по его идентификатору
-      parameters:
-        - in: path
-          name: resourceId
-          required: true
-          schema:
-            $ref: "#/components/parameters/resourceId"
-      responses:
-        200:
-          description: OK
-        400:
-          description: Bad Request
-        401:
-          description: Unauthorized
-        404:
-          description: Not Found
-        500:
-          description: Internal Service Error
-    put:
-      tags: 
-        - resources operations
-      operationId: UpdateResource
-      summary: Обновить объект
-      description: Метод обновляет объект по его идентификатору по атрибутам переданным в запросе
-      parameters:
-        - in: path
-          name: resourceId
-          required: true
-          schema:
-            $ref: "#/components/parameters/resourceId"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ResourceRq'
-              
-      responses:
-        200:
-          description: OK
-        204:
-          description: No Content
-        400:
-          description: Bad Request
-        401:
-          description: Unauthorized
-        404:
-          description: Not Found
-        500:
-          description: Internal Service Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   securitySchemes:
       BearerAuth:
@@ -153,46 +95,163 @@ components:
             tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
             scopes: {}
   parameters:  
-    resourceId:
-      name: resourceId
+    courseId:
+      name: courseId
       in: path
-      description: Уникальный идентификатор
+      description: Уникальный идентификатор курса
       required: true
       schema:
         type: string
         format: uuid
-    resourceFilter:
-      name: resourceFilter
-      in: query
-      description: Фильтр параметр
+    moduleId:
+      name: moduleId
+      in: path
+      description: Уникальный идентификатор модуля
       required: true
       schema:
-        $ref: '#/components/schemas/resourceFilter'
+        type: string
+        format: uuid
   schemas:
-    resourceFilter:
-      description: Фильтр параметр ресурса
-      type: string
-    ResourcesRp: 
-        description: Список объектов ресурс
-        type: array
-        items:
-          $ref: '#/components/schemas/Resource'
-    Resource:
+    ContentBlockCreateRq:
+      description: Схема тела запроса на создание блока учебного материала в модуле
       type: object
-      description: Объект ресурс
-      required: 
-        - resourceId
+      required:
+        - userId
+        - file
+        - title
       properties:
-        Att1:
-         type: string
-         description: Простой атрибут типа строка
-        Att2:
-         type: integer
-         description: Простой атрибут типа число
-        Att3:
-         type: boolean
-         description: Простой атрибут булевого типа
-    ResourceRq:
-      $ref: '#/components/schemas/Resource'
-    
-   
+        userId:
+          type: string
+          format: uuid
+          description: UUID пользователя-автора материала
+        file:
+          type: string
+          format: binary
+          description: Файл учебного материала (PDF, video, audio, etc.)
+        title:
+          type: string
+          description: Название учебного материала
+          example: "Введение в машинное обучение"
+        description:
+          type: string
+          description: Описание учебного материала
+          example: "Базовые понятия и принципы машинного обучения"
+        tags:
+          type: array
+          description: Список тегов для материала
+          items:
+            type: string
+
+    ContentBlockCreateRp:
+      type: object
+      description: Схема ответа на запрос создания блока учебного материала в модуле
+      properties:
+        status:
+          type: string
+          example: "success"
+        message:
+          type: string
+          example: "Учебный материал успешно добавлен"
+        data:
+          type: object
+          items:
+            $ref: '#/components/schemas/ContentBlock'
+          properties:
+            contentBlockId:
+              type: string
+              format: uuid
+              description: UUID созданного блока контента
+            courseId:
+              type: string
+              format: uuid
+            moduleId:
+              type: string
+              format: uuid
+            authorId:
+              type: string
+              format: uuid
+            title:
+              type: string
+              example: "Введение в машинное обучение"
+            fileUrl:
+              type: string
+              description: URL для доступа к загруженному файлу
+            createdAt:
+              type: string
+              format: date-time
+
+    ErrorResponse:
+      type: object
+      description: Обработка ошибок
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Произошла ошибка при обработке запроса"
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: "file"
+              error:
+                type: string
+                example: "Файл превышает максимальный размер 100MB"
+    ContentBlock:
+      type: object
+      description: Объект блока учебного материала
+      required:
+        - contentBlockId
+        - courseId
+        - moduleId
+        - authorId
+        - title
+      properties:
+        contentBlockId:
+          type: string
+          format: uuid
+          description: UUID блока контента
+        courseId:
+          type: string
+          format: uuid
+          description: UUID курса
+        moduleId:
+          type: string
+          format: uuid
+          description: UUID модуля
+        authorId:
+          type: string
+          format: uuid
+          description: UUID автора
+        title:
+          type: string
+          description: Название материала
+        description:
+          type: string
+          description: Описание материала
+        tags:
+          type: array
+          items:
+            type: string
+          description: Список тегов
+        fileUrl:
+          type: string
+          description: URL файла
+        fileSize:
+          type: integer
+          description: Размер файла в байтах
+        mimeType:
+          type: string
+          description: MIME-тип файла
+        createdAt:
+          type: string
+          format: date-time
+          description: Дата создания
+        updatedAt:
+          type: string
+          format: date-time
+          description: Дата обновления"
