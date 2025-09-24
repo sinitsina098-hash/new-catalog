@@ -34,7 +34,7 @@ title: Неупокоев Никита Вячеславович
 ## 2\. 🧩 Концептуальное проектирование API метода
 
 <table header="row">
-<colgroup><col width="156"/><col width="156"/><col width="156"/><col width="192"/><col width="239"/><col/></colgroup>
+<colgroup><col width="156"/><col width="156"/><col width="156"/><col width="192"/><col width="239"/><col width="69"/></colgroup>
 <tr>
 <td>
 
@@ -196,15 +196,16 @@ Id поездки
 
 \- `status: "completed"`
 
-\- `preliminaryCost: number`
-
 \- `message: "Trip ended. Payment in process."`
 
 **Ошибки :**
 
-\- `400 Failed` Parking(нарушение правил парковки)
-
-\- `404 Not Found` (поездка не найдена)
+```markdown
+400: Нарушение правил парковки   
+401: Ошибка авторизации
+404: Поездка не найдена
+409: Невозможно завершить поездку (неверный статус)
+```
 
 </td>
 <td>
@@ -350,3 +351,5 @@ Id самоката
 <openapi src="./fio.yaml" flag="true"/>
 
 ### 
+
+
