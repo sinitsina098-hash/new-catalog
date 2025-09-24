@@ -1,0 +1,159 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0 | 01.04.2024
+  title: Notification Service
+  description: API для отправки сообщений клиентам
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description: Host на котором развернут микросервис
+        EnvironmentPrefix:
+          default: ''
+          description: |
+            Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+            Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном host.ru
+        MicroserviceName:
+          default: microservice
+          description: |
+            Имя под которым микросервис развернут в кластере микросервисов
+            Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+tags:
+    - name: notifications
+      description: Операции по отправке сообщений клиентам
+paths:
+  /notifications:
+    post:
+      tags: 
+        - notifications
+      operationId: SendMessage
+      summary: Отправить сообщение клиенту
+      description: Метод отправляет сообщение клиенту
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageRq"
+            examples:
+              phoneExample:
+                summary: Пример запроса с телефоном
+                value:
+                  clientId: "12345"
+                  contactInfo: "+79161234567"
+              emailExample:
+                summary: Пример запроса с email
+                value:
+                  clientId: "12345"
+                  contactInfo: "client@example.com"
+      responses:
+        200:
+          description: Сообщение успешно отправлено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageRp"
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      OAuth2:
+         type: oauth2
+         flows:
+          password:
+            tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+            scopes: {}
+  schemas:
+    MessageRq:
+      type: object
+      description: Запрос на отправку сообщения
+      required:
+        - clientId
+        - contactInfo
+      properties:
+        clientId:
+          type: string
+          description: Идентификатор клиента
+          example: "12345"
+          minLength: 1
+          maxLength: 50
+        contactInfo:
+          type: string
+          description: Контактная информация
+          example: "+79161234567"
+          minLength: 5
+          maxLength: 100
+    MessageRp:
+      type: object
+      description: Ответ об успешной отправке сообщения
+      properties:
+        status:
+          type: string
+          description: Статус операции
+          example: "success"
+        message:
+          type: string
+          description: Сообщение о результате
+          example: "Сообщение отправлено"
+        data:
+          type: object
+          description: Данные об отправленном сообщении
+          properties:
+            clientId:
+              type: string
+              description: Идентификатор клиента
+            contactInfo:
+              type: string
+              description: Контактная информация
+            messageId:
+              type: string
+              format: uuid
+              description: Уникальный идентификатор отправленного сообщения
+    Error:
+      type: object
+      description: Ответ об ошибке
+      properties:
+        status:
+          type: string
+          description: Статус операции
+          example: "error"
+        message:
+          type: string
+          description: Сообщение об ошибке
+          example: "Invalid contact information format"
+        errors:
+          type: array
+          description: Детали ошибок валидации
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                description: Поле с ошибкой
+              message:
+                type: string
+                description: Описание ошибки"

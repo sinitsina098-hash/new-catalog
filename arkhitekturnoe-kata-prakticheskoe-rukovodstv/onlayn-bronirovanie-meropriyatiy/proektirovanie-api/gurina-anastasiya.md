@@ -148,6 +148,6 @@ Frontend мобильного приложения,
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./fio-proektirovanie-api-2.yaml" flag="true"/>
+<openapi src="./fio-proektirovanie-api-5.yaml" flag="true"/>
 
 ### 
