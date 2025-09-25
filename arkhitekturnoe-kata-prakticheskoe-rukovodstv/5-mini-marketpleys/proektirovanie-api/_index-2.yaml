@@ -1,0 +1,198 @@
+openapi: "3.0.1"
+info:
+  version:  1.0.0 | 01.04.2024
+  title: Наименование сервиса
+  description: Краткое описание api-интерфейса сервиса
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description: Host на котором развернут микросервис
+        EnvironmentPrefix:
+          default: ''
+          description: |
+            Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+            Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном host.ru
+        MicroserviceName:
+          default: microservice
+          description: |
+            Имя под которым микросервис развернут в кластере микросервисов
+            Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+tags:
+    - name: resources operations
+      description: Тэгирование методов для логической группировки по предметной области, например методы работающие с информацией по ресурсам стоит тэгировать как resources operations
+paths:
+  /resources:
+    get:
+      tags: 
+        - resources operations
+      operationId: GetResource
+      summary: Получить список ресурсов
+      description: Метод возвращает список ресурсов. При запросе можно отфильтровать список
+      parameters:
+        - in: query
+          name: resourceFilter
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceFilter"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResourcesRp"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+
+    post:
+      tags: 
+        - resources operations
+      operationId: CreateResource
+      summary: Создать объект
+      description: Метод создает объект с его уникальным идентификатором
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourcesRp'
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/parameters/resourceId'
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+  /resources/{resourceId}:  
+    delete:
+      tags: 
+        - resources operations
+      operationId: deleteResource
+      summary: Удалить объект по его идентификатору
+      description: Метод удаляет объект по его идентификатору
+      parameters:
+        - in: path
+          name: resourceId
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceId"
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+    put:
+      tags: 
+        - resources operations
+      operationId: UpdateResource
+      summary: Обновить объект
+      description: Метод обновляет объект по его идентификатору по атрибутам переданным в запросе
+      parameters:
+        - in: path
+          name: resourceId
+          required: true
+          schema:
+            $ref: "#/components/parameters/resourceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceRq'
+              
+      responses:
+        200:
+          description: OK
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      OAuth2:
+         type: oauth2
+         flows:
+          password:
+            tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+            scopes: {}
+  parameters:  
+    resourceId:
+      name: resourceId
+      in: path
+      description: Уникальный идентификатор
+      required: true
+      schema:
+        type: string
+        format: uuid
+    resourceFilter:
+      name: resourceFilter
+      in: query
+      description: Фильтр параметр
+      required: true
+      schema:
+        $ref: '#/components/schemas/resourceFilter'
+  schemas:
+    resourceFilter:
+      description: Фильтр параметр ресурса
+      type: string
+    ResourcesRp: 
+        description: Список объектов ресурс
+        type: array
+        items:
+          $ref: '#/components/schemas/Resource'
+    Resource:
+      type: object
+      description: Объект ресурс
+      required: 
+        - resourceId
+      properties:
+        Att1:
+         type: string
+         description: Простой атрибут типа строка
+        Att2:
+         type: integer
+         description: Простой атрибут типа число
+        Att3:
+         type: boolean
+         description: Простой атрибут булевого типа
+    ResourceRq:
+      $ref: '#/components/schemas/Resource'
+    
+   
