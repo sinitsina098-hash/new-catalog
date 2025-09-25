@@ -24,5 +24,6 @@ Payment <--> PaymentDB
 Catalog <--> Storage
 Review <--> Storage
 Order --> PaymentDB
-Catalog Б--> Fraud
+Catalog <--> Fraud
+Fraud --> PaymentDB 
 Msg <--> API
