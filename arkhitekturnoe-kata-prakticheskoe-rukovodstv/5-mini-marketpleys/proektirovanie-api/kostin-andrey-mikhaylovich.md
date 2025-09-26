@@ -74,7 +74,7 @@ title: Костин Андрей Михайлович
 </td>
 <td>
 
-оставить отзыв о товаре 
+оставить отзыв о товаре
 
 </td>
 <td>
@@ -370,6 +370,4 @@ statuses
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./_index.yaml" flag="true"/>
-
-### 
+<openapi src="./kostin-andrey-mikhaylovich.yaml" flag="true"/>
