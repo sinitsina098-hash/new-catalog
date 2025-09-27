@@ -1,0 +1,113 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0 | 26.09.2025
+  title: Сервис бронирования билетов 
+  description: API для бронирования билетов на мероприятия
+
+security:
+  - BearerAuth: []
+  - OAuth2: []
+
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+      Host:
+        default: host.ru
+        description: Host на котором развернут микросервис
+      EnvironmentPrefix:
+        default: ''
+        description: |
+          Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+          Фактически позволяет окончательно идентифицировать host микросервиса, т.к. в хостинге мс в кластере они все хостятся на одном dns - условном host.ru
+      MicroserviceName:
+        default: booking-service
+        description: |
+          Имя под которым микросервис развернут в кластере микросервисов.
+          Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+
+tags:
+  - name: booking operations
+    description: Операции по бронированию билетов
+
+paths:
+  /bookings:
+    post:
+      tags: 
+        - booking operations
+      operationId: CreateBooking
+      summary: Создать бронирование
+      description: |
+        Метод создает бронирование выбранных мест на мероприятие.
+        Проверяет доступность мест и возвращает успешный результат бронирования.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+      responses:
+        201:
+          description: Успешное создание бронирования
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingResponse'
+        400:
+          description: Некорректный запрос
+        401:
+          description: Неавторизован
+        404:
+          description: Мероприятие или места не найдены
+        500:
+          description: Внутренняя ошибка сервера
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+          scopes: {}
+
+  schemas:
+    CreateBookingRequest:
+      type: object
+      required:
+        - eventId
+        - customerId
+        - seats
+      properties:
+        eventId:
+          type: string
+          format: uuid
+          description: Идентификатор мероприятия
+        customerId:
+          type: string
+          format: uuid
+          description: Идентификатор клиента
+        seats:
+          type: array
+          description: Список номеров мест для бронирования
+          items:
+            type: string
+            example: "2 ряд 3 место"
+
+    BookingResponse:
+      type: object
+      description: Ответ на успешное бронирование
+      properties:
+        bookingId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор бронирования
+          example: "b1234567-89ab-cdef-0123-456789abcdef"
+        customerId:
+          type: string
+          format: uuid
+          description: Идентификатор клиента

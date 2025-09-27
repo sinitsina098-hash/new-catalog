@@ -126,3 +126,7 @@ frontend
 </td>
 </tr>
 </table>
+
+Swagger
+
+<openapi src="./shulgina-xeniya.yaml" flag="true"/>
