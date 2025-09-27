@@ -1,0 +1,100 @@
+openapi: "3.0.1"
+info:
+  version: "1.0.0 | 27.09.2025"
+  title: Pay Service API
+  description: Возвращает актуальный статус платежа по его идентификатору
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+      Host:
+        default: host.ru
+        description: Host на котором развернут микросервис
+      EnvironmentPrefix:
+        default: ''
+        description: |
+          Префикс тестового стенда (feature environment).
+          Используется для идентификации окружения.
+      MicroserviceName:
+        default: microservice
+        description: |
+          Имя под которым микросервис развернут в кластере
+tags:
+  - name: payments operations
+    description: Методы для работы с платежами
+
+paths:
+  /payments/{paymentId}/status:
+    get:
+      tags:
+        - payments operations
+      operationId: getPaymentStatus
+      summary: Получить статус платежной операции
+      description: Метод возвращает актуальный статус платежной операции по её идентификатору.
+      parameters:
+        - in: path
+          name: paymentId
+          required: true
+          description: Уникальный идентификатор платежа
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Успешное получение статуса платежа
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentStatusResponse"
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Service Error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: https://auth.example.com/token
+          scopes: {}
+  schemas:
+    PaymentStatusResponse:
+      type: object
+      description: Ответ со статусом платежа
+      properties:
+        paymentId:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        status:
+          type: string
+          description: Текущий статус платежа
+          enum: [initiated, processing, paid, declined, refunded]
+          example: "processing"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-09-27T12:34:56Z"
+    Error:
+      type: object
+      description: Ошибка выполнения запроса
+      properties:
+        code:
+          type: string
+          example: "NOT_FOUND"
+        message:
+          type: string
+          example: "Платёж с указанным идентификатором не найден"
