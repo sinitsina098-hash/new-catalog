@@ -1,0 +1,115 @@
+openapi: "3.0.1"
+info:
+  version:  1.0.0 | 28.10.2025
+  title: Notification Service Api
+  description: Notification Service - сервис доставки уведомлений через основные каналы доставки для платформы онлайн-библиотеки. Обрабатывает email, SMS и push-уведомления с поддержкой управления шаблонами.
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description: Host на котором развернут микросервис
+        EnvironmentPrefix:
+          default: ''
+          description: |
+            Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+            Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном host.ru
+        MicroserviceName:
+          default: microservice
+          description: |
+            Имя под которым микросервис развернут в кластере микросервисов
+            Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+tags:
+    - name: notifications
+      description: Отправка уведомлений
+paths:
+  /notifications  :
+    post:
+      tags: 
+        - notifications
+      summary: Отправить уведомление по указанному каналу доставки
+      description: Метод отправляет уведомление пользователю по указанному каналу доставки на основе существующего системного шаблона с заполнением переменных для персонализации
+      operationId: sendNotification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+               $ref: "#/components/schemas/notificationRq"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/notificationRp"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        500:
+          description: Internal Service Error
+
+components:
+  schemas:
+    notificationRq:
+      type: object
+      description: Запрос на отправку уведомления с указанием канала доставки
+      required:
+        - userId
+        - templateId
+        - channel
+        - local
+        - data
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: UUID пользователя-получателя
+          example: e8f5855e-935b-4a31-99fc-316ba7530018
+        templateId:
+          type: string
+          format: uuid
+          description: UUID шаблона уведомления
+          example: 33561bc0-6697-45f1-9562-f41be8c43168
+        channel:
+          type: string
+          enum:
+            - email
+            - sms
+            - push
+          description: Канал доставки уведомления
+        local:
+          type: string
+          description: Язык локализации уведомления
+          example: ru
+        data:
+          type: object
+          description: Данные для подстановки в шаблон
+          additionalProperties:
+            type: string
+          example:
+            course_name: Введение в машинное обучение
+            deadline_date: 07-10-2025
+    notificationRp:
+      type: object
+      description: Ответ об успешном добавлении уведомления в очередь на отправку
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: UUID пользователя-получателя
+          example: e8f5855e-935b-4a31-99fc-316ba7530018
+        status:
+          type: string
+          description: Статус выполнения операции
+          enum: 
+            - success
+            - created
+            - updated
+            - queued
+            - failed
+          example: queued
