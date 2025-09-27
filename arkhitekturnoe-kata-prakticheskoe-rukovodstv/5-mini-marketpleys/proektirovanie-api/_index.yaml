@@ -1,0 +1,228 @@
+openapi: "3.0.1"
+info:
+  version:  1.0.0 | 27.09.2025
+  title: Order (Cart) Service
+  description: API для управления корзиной покупок
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+      Host:
+        default: host.ru
+        description: Host на котором развернут микросервис
+      EnvironmentPrefix:
+        default: ''
+        description: |
+          Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+          Фактически позволяет окончательно идентифицировать host микросервиса, т.к. в хостинге мс в кластере они все хостятся на одном dns - условном host.ru
+      MicroserviceName:
+        default: order
+        description: |
+          Имя под которым микросервис развернут в кластере микросервисов
+          Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+tags:
+  - name: cart operations
+    description: Операции с корзиной пользователя
+paths:
+  /carts/{clientId}/items:
+    post:
+      tags:
+        - cart operations
+      operationId: AddItemToCart
+      summary: Добавить товар в корзину пользователя
+      description: |
+        Метод находит или создает корзину пользователя и добавляет товар с указанным количеством.
+        После добавления пересчитывается итоговая сумма корзины.
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            $ref: "#/components/parameters/clientId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCartItemRq'
+            examples:
+              addItem:
+                summary: Пример добавления товара
+                value:
+                  productId: "7b1d6b3d-1c9a-4d4b-9e7a-2a4a9d1f5b10"
+                  quantity: 2
+      responses:
+        200:
+          description: OK — товар добавлен в существующую корзину, возвращен обновленный объект корзины
+          headers:
+            X-Cart-Created:
+              description: Признак того, что корзина была создана в рамках запроса (false — корзина уже существовала)
+              schema:
+                type: boolean
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        201:
+          description: Created — корзина была создана и товар добавлен, возвращен объект корзины
+          headers:
+            Location:
+              description: URI созданной корзины
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        400:
+          description: Bad Request — валидационная ошибка входных данных (например, quantity ≤ 0)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        401:
+          description: Unauthorized
+        403:
+          description: Forbidden — доступ к корзине другого пользователя запрещен
+        404:
+          description: Not Found — товар не найден (productId)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        409:
+          description: Conflict — конкурентное изменение корзины (повторите запрос)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        422:
+          description: Unprocessable Entity — бизнес-ошибка (например, недостаточно доступного количества товара)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Internal Service Error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2:
+      type: oauth2
+      flows:
+        password:
+          tokenUrl: https://auth.tusvc.bcs.ru/auth/realms/perseus/protocol/openid-connect/token
+          scopes: {}
+  parameters:
+    clientId:
+      name: clientId
+      in: path
+      description: Уникальный идентификатор клиента
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    AddCartItemRq:
+      type: object
+      description: Запрос на добавление товара в корзину
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          format: uuid
+          description: Идентификатор товара
+        quantity:
+          type: integer
+          minimum: 1
+          description: Количество добавляемого товара (шт)
+    Cart:
+      type: object
+      description: Объект корзины пользователя
+      required:
+        - cartId
+        - clientId
+        - items
+        - totalAmount
+        - currency
+      properties:
+        cartId:
+          type: string
+          format: uuid
+          description: Идентификатор корзины
+        clientId:
+          type: string
+          format: uuid
+          description: Идентификатор клиента — владельца корзины
+        items:
+          type: array
+          description: Состав корзины
+          items:
+            $ref: '#/components/schemas/CartItem'
+        totalAmount:
+          type: number
+          format: double
+          description: Итоговая сумма корзины
+        currency:
+          type: string
+          description: Валюта сумм (ISO 4217), например, RUB
+          example: "RUB"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Время последнего обновления корзины (UTC)
+    CartItem:
+      type: object
+      description: Позиция корзины
+      required:
+        - productId
+        - name
+        - price
+        - quantity
+        - lineAmount
+      properties:
+        productId:
+          type: string
+          format: uuid
+          description: Идентификатор товара
+        name:
+          type: string
+          description: Наименование товара на момент добавления
+        price:
+          type: number
+          format: double
+          description: Цена за единицу на момент добавления
+        quantity:
+          type: integer
+          minimum: 1
+          description: Количество единиц товара
+        lineAmount:
+          type: number
+          format: double
+          description: Сумма по позиции (= price * quantity)
+    Error:
+      type: object
+      description: Детали ошибки
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Краткий код ошибки
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: Описание ошибки для клиента
+        details:
+          type: object
+          additionalProperties: true
+          description: Дополнительная информация по ошибке
