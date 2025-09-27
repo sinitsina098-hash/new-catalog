@@ -8,16 +8,7 @@ security:
   - OAuth2: []
 servers:
   - url: /api/v1
-  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
     variables:
-      Host:
-        default: host.ru
-        description: Host на котором развернут микросервис
-      EnvironmentPrefix:
-        default: ''
-        description: |
-          Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
-          Фактически позволяет окончательно идентифицировать host микросервиса, т.к. в хостинге мс в кластере они все хостятся на одном dns - условном host.ru
       MicroserviceName:
         default: order
         description: |
