@@ -1,0 +1,133 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0 | 28.09.2024
+  title: Notification Service
+  description: API для отправки уведомлений пользователям сервиса шеринга электросамокатов
+security:
+  - BearerAuth: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: host.ru
+          description: Host на котором развернут микросервис
+        EnvironmentPrefix:
+          default: ''
+        MicroserviceName:
+          default: notification-service
+tags:
+    - name: notifications
+      description: Операции с уведомлениями
+paths:
+  /notifications/users/{userId}/scooters/{scooterId}:
+    post:
+      tags: 
+        - notifications
+      operationId: SendNotification
+      summary: Отправка уведомления пользователю
+      description: Метод отправляет уведомление пользователю через указанные каналы (email, push, SMS)
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            $ref: "#/components/parameters/userId"
+        - in: path
+          name: scooterId
+          required: true
+          schema:
+            $ref: "#/components/parameters/scooterId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRq'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationRp"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        404:
+          description: Not Found
+        429:
+          description: Too Many Requests
+        500:
+          description: Internal Service Error
+
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+  parameters:  
+    userId:
+      name: userId
+      in: path
+      description: Уникальный идентификатор пользователя
+      required: true
+      schema:
+        type: string
+        format: uuid
+    scooterId:
+      name: scooterId
+      in: path
+      description: Уникальный идентификатор самоката
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    NotificationRq:
+      type: object
+      description: Запрос на отправку уведомления
+      required: 
+        - eventKey
+        - channels
+      properties:
+        eventKey:
+          type: string
+          description: Ключ события для шаблона уведомления
+          example: "scooter_unlocked"
+        channels:
+          type: array
+          description: Каналы для отправки уведомления
+          items:
+            type: string
+            enum: [push, email, sms, in_app]
+          example: ["push", "sms"]
+        startTime:
+          type: string
+          format: date-time
+          description: Время начала события
+          example: "2024-09-28T17:33:10Z"
+        endTime:
+          type: string
+          format: date-time
+          description: Время окончания события
+          example: "2024-09-28T17:48:10Z"
+    NotificationRp:
+      type: object
+      description: Ответ на запрос отправки уведомления
+      required: 
+        - notificationId
+        - status
+      properties:
+        notificationId:
+          type: string
+          format: uuid
+          description: Уникальный идентификатор уведомления
+          example: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        status:
+          type: string
+          description: Статус обработки уведомления
+          enum: [accepted, processing, sent, delivered, failed]
+          example: "accepted"

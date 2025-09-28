@@ -240,3 +240,5 @@ title: Аникеев Максим
 </table>
 
 ## 3\. 🤝 Swagger
+
+<openapi src="./anikeev-maxim.yaml" flag="true"/>
