@@ -7,7 +7,7 @@ order: 4.5
 
 ### 1\.1 Диаграмма компонентов архитектуры
 
-<mermaid path="./stepanova-anna-2.mermaid" width="780px" height="143px"/>
+<mermaid path="./stepanova-anna-2.mermaid" width="780px" height="140px"/>
 
 ### 1\.2 Описание микросервиса
 
