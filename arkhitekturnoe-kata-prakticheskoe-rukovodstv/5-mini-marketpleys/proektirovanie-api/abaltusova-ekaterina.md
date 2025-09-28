@@ -235,6 +235,6 @@ Web/Mobile
 
 ## 3\. 🤝 Swagger
 
-<openapi src="./_index.yaml" flag="true"/>
-
-### 
+<openapi src="./abaltusova_ekaterina.yaml" flag="true"/> 
+ 
+###

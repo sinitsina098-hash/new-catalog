@@ -1,1 +1,79 @@
+openapi: 3.0.3
+info:
+  title: Verification Service
+  description: Микросервис для верификации существующих пользователей
+  version: 1.0.0
 
+servers:
+  - url: https://api.example.com/verification
+    description: Production server
+
+tags:
+  - name: Verification
+    description: Верификация существующего пользователя
+
+paths:
+  /verify:
+    post:
+      tags:
+        - Verification
+      summary: Верификация существующего пользователя
+      description: Проверяет код подтверждения и обновляет статус аккаунта
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyUserRequest'
+      responses:
+        '200':
+          description: Пользователь успешно верифицирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyUserResponse'
+        '400':
+          description: Некорректный код подтверждения или данные
+        '404':
+          description: Пользователь не найден
+
+components:
+  schemas:
+    VerifyUserRequest:
+      type: object
+      required:
+        - id
+        - email
+        - verification_code
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          example: user@ex.com
+        verification_code:
+          type: string
+          example: "123456"
+
+    VerifyUserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          example: user@ex.com
+        status:
+          type: string
+          enum: [pending, verified, expired]
+          example: verified
+        verifiedAt:
+          type: string
+          format: date-time
+          example: "2025-09-20T12:35:56Z"
