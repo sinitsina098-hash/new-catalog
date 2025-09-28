@@ -1,0 +1,164 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0 | 01.04.2024
+  title: Payment Service
+  description: API для управления платежами и привязкой банковских карт в системе шеринга электросамокатов
+security:
+  - BearerAuth: []
+  - OAuth2: []
+servers:
+  - url: /api/v1
+  - url: https://{Host}/{EnvironmentPrefix}{MicroserviceName}/api/v1
+    variables:
+        Host:
+          default: escooter.ru
+          description: Host на котором развернут микросервис
+        EnvironmentPrefix:
+          default: ''
+          description: |
+            Префикс конкретного тестового стенда, выделенного под задачу (feature environment).
+            Фактически позволяет окончательно идентифицировать host микросервиса, т.к. хостинге мс в кластере они все хостятся на одном dns - условном escooter.ru
+        MicroserviceName:
+          default: payment-service
+          description: |
+            Имя под которым микросервис развернут в кластере микросервисов
+            Фактически позволяет окончательно идентифицировать host микросервиса при обращениях к нему
+tags:
+    - name: payment methods operations
+      description: Методы для работы с платежными методами и банковскими картами
+paths:
+  /payment-methods/cards:
+    post:
+      tags: 
+        - payment methods operations
+      operationId: AddPaymentCard
+      summary: Привязка банковской карты для будущих платежей
+      description: |
+        # Потребители: Mobile App
+        
+        # Цель: 
+        Привязка банковской карты для будущих платежей
+        
+        # Задачи:
+        1. Прием данных карты (в защищенном поле)
+        2. Валидация параметров
+        3. Сохранение полученного токена в БД
+        4. Не сохранять данные карты на своих серверах
+        5. Подтверждение привязки карты
+        
+        # Особенности безопасности:
+        - Данные карты передаются только в защищенных полях
+        - Оригинальные данные карты не сохраняются на серверах
+        - Используется токенизация через платежных провайдеров
+        - Соответствие стандарту PCI DSS
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCardRq'
+            examples:
+              basicExample:
+                summary: Пример запроса на привязку карты
+                value:
+                  userId: "110e8400-e29b-41d4-a716-446655440000"
+                  cardNumber: "4242424242424242"
+                  expiryDate: "12/25"
+                  cvv: "123"
+                  cardholderName: "IVAN IVANOV"
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentCardRp'
+              examples:
+                successExample:
+                  summary: Пример успешного ответа
+                  value:
+                    cardId: "b2c3d4e5-f6g7-8901-bcde-f23456789012"
+                    status: "card_linked"
+                    maskedNumber: "4242********4242"
+        400:
+          description: Bad Request
+        401:
+          description: Unauthorized
+        402:
+          description: Payment Required
+        500:
+          description: Internal Service Error
+
+components:
+  securitySchemes:
+      BearerAuth:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      OAuth2:
+         type: oauth2
+         flows:
+          password:
+            tokenUrl: https://auth.escooter.ru/auth/realms/perseus/protocol/openid-connect/token
+            scopes: {}
+
+  schemas:
+    PaymentCardRq:
+      type: object
+      description: Объект запроса на привязку банковской карты
+      required: 
+        - userId
+        - cardNumber
+        - expiryDate
+        - cvv
+        - cardholderName
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: ID пользователя, для которого привязывается карта
+          example: "110e8400-e29b-41d4-a716-446655440000"
+        cardNumber:
+          type: string
+          description: Номер банковской карты 16-19 цифр
+          example: "4242424242424242"
+          minLength: 16
+          maxLength: 19
+        expiryDate:
+          type: string
+          description: Срок действия карты в формате MM/YY
+          example: "12/25"
+          pattern: '^(0[1-9]|1[0-2])\/[0-9]{2}$'
+        cvv:
+          type: string
+          description: CVV/CVC код карты, 3-4 цифры
+          example: "123"
+          minLength: 3
+          maxLength: 4
+        cardholderName:
+          type: string
+          description: Имя владельца карты как на карте
+          example: "IVAN IVANOV"
+
+    PaymentCardRp:
+      type: object
+      description: Объект ответа с данными о привязанной карте
+      required: 
+        - cardId
+        - status
+        - maskedNumber
+      properties:
+        cardId:
+          type: string
+          format: uuid
+          description: Внутренний идентификатор привязанной карты
+          example: "b2c3d4e5-f6g7-8901-bcde-f23456789012"
+        status:
+          type: string
+          description: Статус успешной привязки карты
+          enum: [card_linked]
+          example: "card_linked"
+        maskedNumber:
+          type: string
+          description: Маскированный номер карты для отображения, например "4242****4242"
+          example: "4242********4242"
