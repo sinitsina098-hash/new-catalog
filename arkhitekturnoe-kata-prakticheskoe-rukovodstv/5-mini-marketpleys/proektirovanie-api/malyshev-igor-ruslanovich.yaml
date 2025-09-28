@@ -1,1 +1,231 @@
+openapi: 3.0.3
+info:
+  title: Moderation Service API
+  description: API для модерации объявлений в мини-маркетплейсе. Позволяет модератору одобрить, отклонить или пометить объявление.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local server
 
+paths:
+  /moderation:
+    post:
+      summary: Модерация объявления
+      description: Устанавливает статус объявления (одобрено, отклонено, заблокировано) и логирует причину.
+      tags:
+        - Moderation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationRequest'
+            example:
+              ad_id: "12345"
+              status: "rejected"
+              reason: "Фейковое фото"
+      responses:
+        '200':
+          description: Статус объявления успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerationResponse'
+              example:
+                message: "Статус объявления изменен успешно"
+                ad_id: "12345"
+                current_status: "rejected"
+                updated_at: "2025-09-28T12:34:56Z"
+        '400':
+          description: Некорректные данные
+        '500':
+          description: Ошибка сервера
+
+  /moderation/{ad_id}:
+    get:
+      summary: Получить статус объявления
+      description: Возвращает текущий статус объявления и дату последнего обновления.
+      tags:
+        - Moderation
+      parameters:
+        - name: ad_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID объявления
+      responses:
+        '200':
+          description: Текущий статус объявления
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerationStatus'
+              example:
+                ad_id: "12345"
+                current_status: "approved"
+                updated_at: "2025-09-28T11:22:33Z"
+        '404':
+          description: Объявление не найдено
+        '500':
+          description: Ошибка сервера
+
+    put:
+      summary: Обновить статус объявления
+      description: Позволяет модератору изменить статус конкретного объявления по ID и указать причину.
+      tags:
+        - Moderation
+      parameters:
+        - name: ad_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID объявления
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModerationUpdateRequest'
+            example:
+              status: "flagged"
+              reason: "Подозрительное описание"
+      responses:
+        '200':
+          description: Статус объявления успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModerationResponse'
+              example:
+                message: "Статус объявления изменен успешно"
+                ad_id: "12345"
+                current_status: "flagged"
+                updated_at: "2025-09-28T13:45:00Z"
+        '400':
+          description: Некорректные данные
+        '404':
+          description: Объявление не найдено
+        '500':
+          description: Ошибка сервера
+
+  /moderation/{ad_id}/history:
+    get:
+      summary: Получить историю модерации объявления
+      description: Возвращает список всех решений по объявлению с датой, статусом и причиной.
+      tags:
+        - Moderation
+      parameters:
+        - name: ad_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID объявления
+      responses:
+        '200':
+          description: История модерации объявления
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModerationHistoryItem'
+              example:
+                - ad_id: "12345"
+                  status: "rejected"
+                  reason: "Фейковое фото"
+                  updated_at: "2025-09-20T10:15:00Z"
+                - ad_id: "12345"
+                  status: "flagged"
+                  reason: "Подозрительное описание"
+                  updated_at: "2025-09-25T16:40:00Z"
+                - ad_id: "12345"
+                  status: "approved"
+                  reason: ""
+                  updated_at: "2025-09-28T11:22:33Z"
+        '404':
+          description: Объявление не найдено
+        '500':
+          description: Ошибка сервера
+
+components:
+  schemas:
+    ModerationRequest:
+      type: object
+      required:
+        - ad_id
+        - status
+      properties:
+        ad_id:
+          type: string
+          description: Идентификатор объявления
+        status:
+          type: string
+          enum: [approved, rejected, flagged]
+          description: Решение модератора
+        reason:
+          type: string
+          description: Причина, указанная модератором (обязательно для rejected и flagged)
+
+    ModerationUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [approved, rejected, flagged]
+          description: Новый статус объявления
+        reason:
+          type: string
+          description: Причина изменения статуса (обязательно для rejected и flagged)
+
+    ModerationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Результат операции
+        ad_id:
+          type: string
+          description: ID объявления
+        current_status:
+          type: string
+          description: Текущий статус объявления
+        updated_at:
+          type: string
+          format: date-time
+          description: Дата и время обновления
+
+    ModerationStatus:
+      type: object
+      properties:
+        ad_id:
+          type: string
+          description: ID объявления
+        current_status:
+          type: string
+          description: Текущий статус объявления
+        updated_at:
+          type: string
+          format: date-time
+          description: Дата и время последнего обновления
+
+    ModerationHistoryItem:
+      type: object
+      properties:
+        ad_id:
+          type: string
+          description: ID объявления
+        status:
+          type: string
+          description: Статус, установленный модератором
+        reason:
+          type: string
+          description: Причина изменения статуса
+        updated_at:
+          type: string
+          format: date-time
+          description: Дата и время изменения
